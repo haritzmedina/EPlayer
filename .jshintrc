@@ -1,0 +1,15 @@
+{
+  "curly": true,
+  "devel": true, /* TODO Remove in production */
+  "browser": true,
+  "eqeqeq": true,
+  "undef": true,
+  "globals": {
+    "jQuery": true,
+    "GCPlayerController": true,
+    "GCPlayerModel": true,
+    "GCPlayerView": true,
+    "chrome": true
+  },
+  "indent": 4
+}

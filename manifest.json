@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+
+  "name": "Google chrome player",
+  "description": "A music player for google chrome.",
+  "version": "0.1",
+
+  "app": {
+    "background": {
+      "scripts": ["background.js"]
+    }
+  },
+
+  "icons": { "16": "icon.png", "128": "icon.png" },
+
+  "permissions": [
+    "unlimitedStorage",
+    {"fileSystem": ["retainEntries", "directory"]},
+    "storage"
+  ]
+}
