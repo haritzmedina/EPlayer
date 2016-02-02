@@ -30,7 +30,6 @@ GCPlayerModel.prototype.readFolder = function(entry_folder){
     "use strict";
     var dirReader = entry_folder.createReader();
     var songs = this.songs;
-    var saveSongs = this.saveSongs;
     var readEntries = function(){
         dirReader.readEntries(function(results){
             debugger;
@@ -41,7 +40,9 @@ GCPlayerModel.prototype.readFolder = function(entry_folder){
                 readEntries();
             }
             else{
-                saveSongs(songs);
+                window.GCPlayer.model.saveSongs(songs);
+                // TODO print songs
+                window.GCPlayer.view.displaySongs(songs);
             }
         });
     };
@@ -100,7 +101,7 @@ GCPlayerModel.prototype.setParams = function (x, wantSync) {
                 console.log(chrome.runtime.lastError);
         }
     );
-}
+};
 
 GCPlayerModel.prototype.getParams = function (x, callback, wantSync) {
     var storageArea = wantSync ? chrome.storage.sync : chrome.storage.local;
@@ -112,7 +113,7 @@ GCPlayerModel.prototype.getParams = function (x, callback, wantSync) {
                 callback(items);
         }
     );
-}
+};
 
 
 var Song = function(file){

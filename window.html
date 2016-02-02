@@ -9,9 +9,23 @@
     <link rel="stylesheet" media="screen and (max-width: 799px)" href="css/windowSmall.css"/>
 </head>
 <body>
-    <div id="playlist"></div>
-    <div id="content"></div>
+    <div id="menu">
+        <a id="librarySelector" class="menuElement"><img src="/img/library.png" title="Library" alt="Library"></a>
+        <a id="playlistSelector" class="menuElement"><img src="/img/playlist.png" title="Playlists" alt="Playlist"></a>
+        <a id="settingsSelector" class="menuElement"><img src="/img/settings.png"  title="Settings" alt="Settings"></a>
+        <a id="expandSelector" class="menuElement"><img src="/img/expand.png" title="Expand menu" alt="Expand lateral menu"></a>
+    </div>
+    <div id="content">
+        <div id="searchWrapper">
+            <input id="search" type="search" placeholder="Search for song"/>
+        </div>
+        <div id="searchResults">
+            <!-- Here will be added song results -->
+        </div>
+    </div>
     <div id="playerWrapper">
+        <a class="playerControl"><img id="play" src="/img/play.png"></a>
+        <a class="playerControl"><img id="pause" src="/img/pause.png"></a>
     </div>
     <audio id="player" controls="controls"></audio>
 </body>
