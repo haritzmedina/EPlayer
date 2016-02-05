@@ -11,7 +11,7 @@ GCPlayerView.prototype.init = function () {
 
 GCPlayerView.prototype.playSong = function(url){
     "use strict";
-    console.log(url);
+    // Play song
     var player = document.getElementById('player');
     player.src = url;
     player.play();

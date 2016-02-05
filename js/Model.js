@@ -97,8 +97,9 @@ GCPlayerModel.prototype.setParams = function (x, wantSync) {
     var storageArea = wantSync ? chrome.storage.sync : chrome.storage.local;
     storageArea.set(x,
         function () {
-            if (chrome.runtime.lastError)
+            if (chrome.runtime.lastError){
                 console.log(chrome.runtime.lastError);
+            }
         }
     );
 };
@@ -107,12 +108,77 @@ GCPlayerModel.prototype.getParams = function (x, callback, wantSync) {
     var storageArea = wantSync ? chrome.storage.sync : chrome.storage.local;
     storageArea.get(x,
         function (items) {
-            if (chrome.runtime.lastError)
+            if (chrome.runtime.lastError){
                 console.log(chrome.runtime.lastError);
-            else
+            }
+            else{
                 callback(items);
+            }
         }
     );
+};
+
+
+/* Playlist manager */
+GCPlayerModel.prototype.playlist = {};
+
+GCPlayerModel.prototype.playlist.songs = [];
+GCPlayerModel.prototype.playlist.current = -1;
+
+GCPlayerModel.prototype.playlist.nextSong = function(){
+    "use strict";
+    var nextSongIndex = this.current+1;
+    if(typeof this.songs[nextSongIndex] === 'undefined'){
+        // Song not exists
+        console.log("Playlist not started");
+        return null;
+    }
+    else{
+        // Play song
+        var song = this.songs[nextSongIndex];
+        window.GCPlayer.model.playSong(song.file);
+        // Update the index
+        this.current = this.current+1;
+    }
+};
+
+GCPlayerModel.prototype.playlist.createRandom = function(songs, autoplay){
+    "use strict";
+    autoplay = autoplay || false;
+
+    // Create a shuffle songs array
+    var shuffleSongs = Array.apply(undefined,songs);
+    var i, j, temp;
+    for (i = shuffleSongs.length - 1; i > 0; i -= 1) {
+        j = Math.floor(Math.random() * (i + 1));
+        temp = shuffleSongs[i];
+        shuffleSongs[i] = shuffleSongs[j];
+        shuffleSongs[j] = temp;
+    }
+    // Create a new playlist
+    if(autoplay === null){
+        autoplay = false;
+    }
+    this.create(shuffleSongs, autoplay);
+};
+
+/**
+ * Create a new playlist with the given songs
+ * @param songs Given songs of the new
+ * @param autoplay
+ */
+GCPlayerModel.prototype.playlist.create = function(songs, autoplay){
+    "use strict";
+    autoplay = autoplay || false;
+    if(songs instanceof Array){
+        if(songs.length>0){
+            this.songs = songs;
+            this.current = 0;
+            if(autoplay){
+                window.GCPlayer.model.playSong(this.songs[this.current].file);
+            }
+        }
+    }
 };
 
 

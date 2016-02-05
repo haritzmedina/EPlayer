@@ -2,6 +2,7 @@
   "curly": true,
   "devel": true, /* TODO Remove in production */
   "browser": true,
+  "esnext": true, // ECMAScript 6
   "eqeqeq": true,
   "undef": true,
   "globals": {
@@ -9,7 +10,8 @@
     "GCPlayerController": true,
     "GCPlayerModel": true,
     "GCPlayerView": true,
-    "chrome": true
+    "chrome": true,
+    "$": true
   },
   "indent": 4
 }
