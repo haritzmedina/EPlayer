@@ -6,7 +6,7 @@ var GCPlayerView = function (){};
 
 GCPlayerView.prototype.init = function () {
     "use strict";
-
+    this.player.init();
 };
 
 GCPlayerView.prototype.playSong = function(url){
@@ -39,6 +39,17 @@ GCPlayerView.prototype.displaySong = function(song, container){
 //// Player controls
 
 GCPlayerView.prototype.player = {};
+GCPlayerView.prototype.player.progressBar = null;
+GCPlayerView.prototype.player.playerTimeValue = null;
+GCPlayerView.prototype.player.playerTimeMax = null;
+
+GCPlayerView.prototype.player.init = function(){
+    "use strict";
+    this.progressBar = document.getElementById('playerProgressBar');
+    this.playerTimeValue = document.getElementById('playerTimeValue');
+    this.playerTimeMax = document.getElementById('playerTimeMax');
+};
+
 GCPlayerView.prototype.player.playPause = function(){
     "use strict";
     var player = document.getElementById("player");
@@ -48,4 +59,31 @@ GCPlayerView.prototype.player.playPause = function(){
     else{
         player.pause();
     }
+};
+
+GCPlayerView.prototype.player.updatePlayingSeconds = function(seconds){
+    "use strict";
+    this.progressBar.value = seconds;
+    this.playerTimeValue.textContent = this.toMinuteSecondsFormat(seconds);
+};
+
+GCPlayerView.prototype.player.setMaxPlayingSeconds = function(seconds){
+    "use strict";
+    this.progressBar.max = seconds;
+    this.playerTimeMax.textContent = this.toMinuteSecondsFormat(seconds);
+};
+
+GCPlayerView.prototype.player.toMinuteSecondsFormat = function(seconds){
+    "use strict";
+    var time = "";
+    var hours = Math.floor(seconds / 3600);
+    if(hours>0){
+        time += hours+":";
+    }
+    seconds = seconds % 3600;
+    var minutes = Math.floor(seconds / 60);
+    var secs = seconds % 60;
+    secs = secs >= 10 ? secs : "0"+secs;
+    time += minutes+":"+secs;
+    return time;
 };

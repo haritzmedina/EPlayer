@@ -31,16 +31,19 @@ GCPlayerController.prototype.play = function(song){
 GCPlayerController.prototype.initHandlers = function(){
     "use strict";
     // Progress bar handlers
-    var playerProgressBar = document.getElementById('playerProgressBar');
     var player = document.getElementById('player');
     // Update progress bar on timeupdate
     player.addEventListener('timeupdate', function(event){
-        console.log();
-        playerProgressBar.value = Math.floor(player.currentTime);
+        window.GCPlayer.view.player.updatePlayingSeconds(Math.floor(player.currentTime));
     });
     // Set max progress bar value when song loaded
     player.addEventListener('loadedmetadata', function(){
-        playerProgressBar.max = player.duration;
+        window.GCPlayer.view.player.setMaxPlayingSeconds(Math.floor(player.duration));
+    });
+
+    // Music player handlers
+    player.addEventListener('ended', function(event){
+        window.GCPlayer.controller.player.playNextSong();
     });
 
     // Multimedia keys
