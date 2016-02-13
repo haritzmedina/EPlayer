@@ -83,7 +83,13 @@ GCPlayerModel.prototype.saveSongs = function(songs){
     }
 };
 
-GCPlayerModel.prototype.playSong = function(fileRef){
+GCPlayerModel.prototype.playSong = function(song){
+    "use strict";
+    // TODO current song view update
+    this.playSongFile(song.file);
+};
+
+GCPlayerModel.prototype.playSongFile = function(fileRef){
     "use strict";
     fileRef.file(function(file){
         console.log(file);
@@ -127,22 +133,125 @@ GCPlayerModel.prototype.getParams = function (x, callback, wantSync) {
 GCPlayerModel.prototype.playlist = {};
 
 GCPlayerModel.prototype.playlist.songs = [];
-GCPlayerModel.prototype.playlist.current = -1;
+GCPlayerModel.prototype.playlist.current = -1; // Playing song index
+GCPlayerModel.prototype.playlist.repeatMode = 0; // 0: none, 1: playlist
+
+
+GCPlayerModel.prototype.playlist.playNextSong = function(){
+    "use strict";
+    var song = this.nextSong(); // Retrieve the next song
+    window.GCPlayer.model.playSong(song); // Play the song
+    this.nextSongIndex(); // Update the index
+};
+
+GCPlayerModel.prototype.playlist.nextSongIndex = function(){
+    "use strict";
+    if(this.songs.length===0){
+        this.current = -1;
+    }
+    else{
+        if(this.current<this.songs.length-1){
+            this.current += 1;
+        }
+        else{
+            if(this.repeatMode===0){
+                this.current = -1;
+            }
+            else{
+                this.current = 0;
+            }
+        }
+    }
+};
 
 GCPlayerModel.prototype.playlist.nextSong = function(){
     "use strict";
     var nextSongIndex = this.current+1;
-    if(typeof this.songs[nextSongIndex] === 'undefined'){
-        // Song not exists
-        console.log("Playlist not started");
-        return null;
+    if(typeof this.songs[nextSongIndex] === 'undefined') { // Is the last song or empty playlist
+        if(this.repeatMode===0) {
+            return null;
+        }
+        else {
+            if (this.songs.length === 0) {
+                return null;
+            }
+            else {
+                return this.songs[0];
+            }
+        }
+    }
+    else {
+        return this.songs[nextSongIndex];
+    }
+};
+
+GCPlayerModel.prototype.playlist.hasNextSong = function(){
+    "use strict";
+    var nextSongIndex = this.current+1;
+    if(this.repeatMode===0){
+        return typeof this.songs[nextSongIndex] !== 'undefined';
     }
     else{
-        // Play song
-        var song = this.songs[nextSongIndex];
-        window.GCPlayer.model.playSong(song.file);
-        // Update the index
-        this.current = this.current+1;
+        return true;
+    }
+};
+
+GCPlayerModel.prototype.playlist.playPreviousSong = function(){
+    "use strict";
+    var song = this.previousSong(); // Retrieve the previous song
+    window.GCPlayer.model.playSong(song); // Play the song
+    this.previousSongIndex(); // Update the index
+};
+
+GCPlayerModel.prototype.playlist.hasPreviousSong = function(){
+    "use strict";
+    var previousSongIndex = this.current-1;
+    if(this.repeatMode===0){
+        return typeof this.songs[previousSongIndex] !== 'undefined';
+    }
+    else{
+        return true;
+    }
+};
+
+GCPlayerModel.prototype.playlist.previousSong = function(){
+    "use strict";
+    var previousSongIndex = this.current-1;
+    if(typeof this.songs[previousSongIndex] === 'undefined') { // Is the last song or empty playlist
+        if(this.repeatMode===0) {
+            return null;
+        }
+        else {
+            if (this.songs.length === 0) {
+                return null;
+            }
+            else {
+                return this.songs[this.songs.length-1];
+            }
+        }
+    }
+    else {
+        return this.songs[previousSongIndex];
+    }
+};
+
+GCPlayerModel.prototype.playlist.previousSongIndex = function(){
+    "use strict";
+    if(this.songs.length===0){
+        this.current = -1;
+    }
+    else{
+        if(this.current>0){
+            this.current -= 1;
+        }
+        else{
+            if(this.repeatMode===0){
+                this.current = -1;
+            }
+            else{
+                this.current = this.songs.length-1;
+            }
+        }
     }
 };
 
@@ -179,7 +288,7 @@ GCPlayerModel.prototype.playlist.create = function(songs, autoplay){
             this.songs = songs;
             this.current = 0;
             if(autoplay){
-                window.GCPlayer.model.playSong(this.songs[this.current].file);
+                window.GCPlayer.model.playSong(this.songs[this.current]);
             }
         }
     }

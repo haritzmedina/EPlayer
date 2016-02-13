@@ -42,4 +42,38 @@ GCPlayerController.prototype.initHandlers = function(){
     player.addEventListener('loadedmetadata', function(){
         playerProgressBar.max = player.duration;
     });
+
+    // Multimedia keys
+    chrome.commands.onCommand.addListener(function(command){
+        if(command==="playPause"){
+            window.GCPlayer.controller.player.playPause();
+        }
+        if(command==="nextSong"){
+            window.GCPlayer.controller.player.playNextSong();
+        }
+        if(command==="previousSong"){
+            window.GCPlayer.controller.player.playPreviousSong();
+        }
+    });
+};
+
+GCPlayerController.prototype.player = {};
+
+GCPlayerController.prototype.player.playPause = function(){
+    "use strict";
+    window.GCPlayer.view.player.playPause();
+};
+
+GCPlayerController.prototype.player.playNextSong = function(){
+    "use strict";
+    if(window.GCPlayer.model.playlist.hasNextSong()){
+        window.GCPlayer.model.playlist.playNextSong();
+    }
+};
+
+GCPlayerController.prototype.player.playPreviousSong = function(){
+    "use strict";
+    if(window.GCPlayer.model.playlist.hasPreviousSong()){
+        window.GCPlayer.model.playlist.playPreviousSong();
+    }
 };

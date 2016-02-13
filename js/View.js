@@ -35,3 +35,17 @@ GCPlayerView.prototype.displaySong = function(song, container){
     div.textContent = song.file.name;
     container.appendChild(div);
 };
+
+//// Player controls
+
+GCPlayerView.prototype.player = {};
+GCPlayerView.prototype.player.playPause = function(){
+    "use strict";
+    var player = document.getElementById("player");
+    if(player.paused===true){
+        player.play();
+    }
+    else{
+        player.pause();
+    }
+};
