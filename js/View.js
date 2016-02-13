@@ -24,9 +24,14 @@ GCPlayerView.prototype.displaySongs = function(songs){
     resultsDiv.innerHTML = ""; // Clean space
     for(var i=0;i<songs.length;i++){
         var song = songs[i];
-        var div = document.createElement('div');
-        div.classList.add('songElement');
-        div.textContent = song.file.name;
-        resultsDiv.appendChild(div);
+        this.displaySong(song, resultsDiv);
     }
+};
+
+GCPlayerView.prototype.displaySong = function(song, container){
+    "use strict";
+    var div = document.createElement('div');
+    div.classList.add('songElement');
+    div.textContent = song.file.name;
+    container.appendChild(div);
 };

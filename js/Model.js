@@ -32,10 +32,14 @@ GCPlayerModel.prototype.readFolder = function(entry_folder){
     var songs = this.songs;
     var readEntries = function(){
         dirReader.readEntries(function(results){
-            debugger;
             if(results.length){
+                var fileExtensionRegEx = /(?:\.([^.]+))?$/;
                 for(var i=0; i<results.length;i++){
-                    songs.push(new Song(results[i]));
+                    var extension = fileExtensionRegEx.exec(results[i].name);
+                    debugger;
+                    if(extension[0]===".mp3"){
+                        songs.push(new Song(results[i]));
+                    }
                 }
                 readEntries();
             }
