@@ -30,8 +30,10 @@ GCPlayerController.prototype.play = function(song){
 
 GCPlayerController.prototype.initHandlers = function(){
     "use strict";
+
     // Progress bar handlers
     var player = document.getElementById('player');
+    var playerProgressbar = document.getElementById('playerProgressBar');
     // Update progress bar on timeupdate
     player.addEventListener('timeupdate', function(event){
         window.GCPlayer.view.player.updatePlayingSeconds(Math.floor(player.currentTime));
@@ -40,6 +42,15 @@ GCPlayerController.prototype.initHandlers = function(){
     player.addEventListener('loadedmetadata', function(){
         window.GCPlayer.view.player.setMaxPlayingSeconds(Math.floor(player.duration));
     });
+    playerProgressbar.addEventListener('click', function(event){
+        // Get value on progress bar
+        var x = event.pageX - this.offsetLeft,
+            y = event.pageY - this.offsetTop,
+            clickedValue = x * this.max / this.offsetWidth;
+        // Move the playing song
+        window.GCPlayer.view.player.setCurrentTime(clickedValue);
+    });
+
 
     // Music player handlers
     player.addEventListener('ended', function(event){

@@ -36,7 +36,6 @@ GCPlayerModel.prototype.readFolder = function(entry_folder){
                 var fileExtensionRegEx = /(?:\.([^.]+))?$/;
                 for(var i=0; i<results.length;i++){
                     var extension = fileExtensionRegEx.exec(results[i].name);
-                    debugger;
                     if(extension[0]===".mp3"){
                         songs.push(new Song(results[i]));
                     }
@@ -46,7 +45,7 @@ GCPlayerModel.prototype.readFolder = function(entry_folder){
             else{
                 window.GCPlayer.model.saveSongs(songs);
                 // TODO print songs
-                window.GCPlayer.view.displaySongs(songs);
+                window.GCPlayer.view.displaySearchSongs(songs);
             }
         });
     };
