@@ -17,9 +17,11 @@ GCPlayerController.prototype.setMusicDirectory = function(){
     chrome.fileSystem.chooseEntry({type: 'openDirectory'}, function(dirEntry){
         // Save new folder reference on model
         var folderPointer = chrome.fileSystem.retainEntry(dirEntry);
-        window.GCPlayer.model.setParams({'library.directory': folderPointer});
-        // Read folder
-        window.GCPlayer.model.readFolder(dirEntry);
+        // TODO retrieve and save localpath and entrypoint
+        chrome.fileSystem.getDisplayPath(dirEntry, function(absolutePath){
+            window.GCPlayer.model.library.addFolder(folderPointer, absolutePath);
+        });
+        window.GCPlayer.model.library.loadFolder(folderPointer);
     });
 };
 

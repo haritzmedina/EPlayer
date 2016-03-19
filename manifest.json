@@ -14,8 +14,8 @@
   "icons": { "16": "icon.png", "128": "icon.png" },
 
   "permissions": [
-    "unlimitedStorage",
     {"fileSystem": ["retainEntries", "directory"]},
+    "unlimitedStorage",
     "storage"
   ],
 
