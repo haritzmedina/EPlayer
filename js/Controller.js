@@ -45,6 +45,7 @@ GCPlayerController.prototype.initHandlers = function(){
         window.GCPlayer.view.player.setMaxPlayingSeconds(Math.floor(player.duration));
     });
     playerProgressbar.addEventListener('click', function(event){
+        // TODO When progress bar is bigger not the whole bar is touchable (Y coord)
         // Get value on progress bar
         var x = event.pageX - this.offsetLeft,
             y = event.pageY - this.offsetTop,

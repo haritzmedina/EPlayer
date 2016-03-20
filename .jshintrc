@@ -11,7 +11,8 @@
     "GCPlayerModel": true,
     "GCPlayerView": true,
     "chrome": true,
-    "$": true
+    "$": true,
+    "jsmediatags": true
   },
   "indent": 4
 }

@@ -141,7 +141,7 @@ GCPlayerModel.prototype.library.updateSongs = function(songs, libraryFolder){
         for(var i=0; i<songList.length;i++){
             var songEntry = songList[i];
             var songId = folder.absolutePath+"#"+songEntry.name;
-            // TODO Exist song id
+            // Exist song id
             if(storedSongs[songId]===undefined){
                 storedSongs[songId] = new Song(songEntry.name, folder.absolutePath, songEntry, "Unknown", "Unknown");
             }
@@ -154,10 +154,31 @@ GCPlayerModel.prototype.library.updateSongs = function(songs, libraryFolder){
                     debugger;
                 });*/
             }
+            // Retrieve ID3 tags
+            /*songEntry.file(function(file){
+                var reader = new FileReader();
+                reader.onload = function(){
+                    var dataURL = reader.result;
+                    jsmediatags.read(dataURL, {
+                        onSuccess: function(tag) {
+                        },
+                        onError: function(error) {
+                            console.log(error);
+                        }
+                    }, function(err){console.log(err);debugger;});
+                };
+                reader.readAsDataURL(file);
+
+            });*/
+            songEntry.file(function(file) {
+                id3(file, function (err, tags) {
+                    console.log(file.name, err, tags);
+                });
+            });
         }
         // TODO Check if a song is missing in every library folder
 
-        // TODO Save songs in local storage and make it accesible
+        // Save songs in local storage and make it accesible
         window.GCPlayer.model.setParams({"library.songs": storedSongs}, false);
         window.GCPlayer.model.library.songs = storedSongs;
     });
