@@ -210,7 +210,7 @@
 			if(raw) {
 				return str;
 			}
-			return decodeURIComponent(encodeURIComponent(str));
+			return str;
 		}
 	};
 
@@ -228,10 +228,15 @@
 			length += this.byteLength;
 		}
 		if(bom) {
-			var bomInt = this.getUint16(offset);
-			if(bomInt === 0xFFFE) {
-				littleEndian = true;
-			}
+            try{
+                var bomInt = this.getUint16(offset);
+                if(bomInt === 0xFFFE) {
+                    littleEndian = true;
+                }
+            }
+            catch(e){
+
+            }
 			offset += 2;
 			length -= 2;
 		}
@@ -256,7 +261,7 @@
 		if(useBuffer) {
 			return (new Buffer(str)).toString();
 		} else {
-			return decodeURIComponent(escape(str));
+			return str;
 		}
 	};
 
@@ -693,10 +698,15 @@
 						}
 						i++;
 					} else {
-						if(dv.getUint8(i) === 0x00) {
-							variableStart = i + 1;
-							break;
-						}
+                        try{
+                            if(dv.getUint8(i) === 0x00) {
+                                variableStart = i + 1;
+                                break;
+                            }
+                        }
+                        catch(e){
+                            break;
+                        }
 					}
 				}
 				if(encoding === 0 || encoding === 3) {
