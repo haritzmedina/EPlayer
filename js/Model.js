@@ -51,32 +51,31 @@ GCPlayerModel.prototype.loadSavedModel = function(){
     this.getParams(window.GCPlayer.model.storage.libraryFolder, function(result){
         var folders = result[window.GCPlayer.model.storage.libraryFolder];
         if(!jQuery.isEmptyObject(folders)){
+            // Load folders content and display songs on view
             for(var i=0;i<folders.length;i++){
                 var folder = folders[i];
                 console.log("Loading content folder for "+folder.absolutePath);
                 window.GCPlayer.model.library.loadFolder(folder);
             }
         }
-    });
-};
-
-GCPlayerModel.prototype.playSongFile = function(fileRef){
-    "use strict";
-    fileRef.file(function(file){
-        console.log(file);
-        var reader = new FileReader();
-        reader.onload = function(){
-            var dataURL = reader.result;
-            window.GCPlayer.view.playSong(dataURL);
-        };
-        reader.readAsDataURL(file);
+        else{
+            // TODO Show welcome message on screen
+        }
     });
 };
 
 GCPlayerModel.prototype.playSong = function(song){
     "use strict";
     // TODO current song view update
-    this.playSongFile(song.file);
+    song.file.file(function(file){
+        console.log(file);
+        var reader = new FileReader();
+        reader.onload = function(){
+            var dataURL = reader.result;
+            window.GCPlayer.view.playSong(song, dataURL);
+        };
+        reader.readAsDataURL(file);
+    });
 };
 
 
@@ -108,8 +107,17 @@ GCPlayerModel.prototype.library.loadFolder = function(libraryFolder){
                 }
                 else{
                     console.log("Folder "+folder.absolutePath+" contains "+songs.length+" songs.");
-                    window.GCPlayer.model.library.updateSongs(songs, folder);
-                    // TODO Display songs in library container
+                    var updateSongsPromise = new Promise(function(resolve, reject){
+                        window.GCPlayer.model.library.updateSongs(songs, folder, function(){
+                            resolve(true);
+                        });
+                    });
+                    updateSongsPromise.then(function(){
+                        // TODO Display songs in library container
+                        window.GCPlayer.view.displaySearchSongs(window.GCPlayer.model.library.getSongArray());
+                    });
+
+
                 }
             });
         };
@@ -139,7 +147,7 @@ GCPlayerModel.prototype.library.addFolder = function(libraryFolder, libraryPath)
     }, false);
 };
 
-GCPlayerModel.prototype.library.updateSongs = function(songs, libraryFolder){
+GCPlayerModel.prototype.library.updateSongs = function(songs, libraryFolder, callback){
     "use strict";
     var songList = songs, folder = libraryFolder;
     window.GCPlayer.model.getParams(window.GCPlayer.model.storage.librarySongs, function(result){
@@ -156,17 +164,13 @@ GCPlayerModel.prototype.library.updateSongs = function(songs, libraryFolder){
                     resolve(songEntry.filename);
                 });
             });
-            promise.catch(function(error){
-                console.log(error);
-            });
             promises.push(promise);
         }
         Promise.all(promises).then(function(result){
-            // TODO Promises if had exception aren't resolved
-            console.log("Promises done", result);
             var storedSongs = window.GCPlayer.model.library.songs;
             window.GCPlayer.model.setParams({"library.songs": storedSongs}, false);
-            console.log("Songs from "+ folder.absolutePath +" updated in database");
+            console.log("Songs from "+ folder.absolutePath +" updated.");
+            callback();
         }).catch(function(result){
             console.log("Error detected",result);
         });
@@ -179,6 +183,7 @@ GCPlayerModel.prototype.library.updateSongs = function(songs, libraryFolder){
 GCPlayerModel.prototype.library.updateSong = function(songEntry, folder, callback){
     "use strict";
     var songId = folder.absolutePath+"#"+songEntry.name;
+    // TODO Check if file is updated or not
     // If song does not exists, add to database
     if(window.GCPlayer.model.library.songs[songId]===undefined){
         // Song metadata
@@ -196,6 +201,9 @@ GCPlayerModel.prototype.library.updateSong = function(songEntry, folder, callbac
                     }
                     if(tags.title!==null){
                         window.GCPlayer.model.library.setSongParam(songId, "title", tags.title);
+                    }
+                    if(tags.album!==null){
+                        window.GCPlayer.model.library.setSongParam(songId, "album", tags.album);
                     }
                     callback();
                 });
@@ -441,12 +449,13 @@ GCPlayerModel.prototype.playlist.create = function(songs, autoplay){
 };
 
 
-var Song = function(filename, folder, file, title, artist, updatedDate){
+var Song = function(filename, folder, file, title, artist, album, updatedDate){
     "use strict";
     this.file = file;
     this.filename = filename;
     this.folder = folder;
     this.artist = artist;
+    this.album = album;
     this.title = title;
     this.lastUpdatedDate = updatedDate;
 };

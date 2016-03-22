@@ -9,12 +9,18 @@ GCPlayerView.prototype.init = function () {
     this.player.init();
 };
 
-GCPlayerView.prototype.playSong = function(url){
+GCPlayerView.prototype.playSong = function(song, url){
     "use strict";
     // Play song
-    var player = document.getElementById('player');
-    player.src = url;
-    player.play();
+    this.player.playerInstance.src = url;
+    this.player.play();
+    // Display song info
+    // Display notification
+    // Display song info in playerWrapper
+    var infoContainer = document.getElementById("playingSongInfo");
+    infoContainer.querySelector("#artist").innerText = song.artist;
+    infoContainer.querySelector("#title").innerText = song.title;
+    infoContainer.querySelector("#album").innerText = song.album;
 };
 
 GCPlayerView.prototype.displaySearchSongs = function(songs){
@@ -32,7 +38,7 @@ GCPlayerView.prototype.displaySong = function(song, container){
     "use strict";
     var div = document.createElement('div');
     div.classList.add('songElement');
-    div.textContent = song.file.name;
+    div.textContent = song.artist+"-"+song.title;
     container.appendChild(div);
 };
 
@@ -60,6 +66,23 @@ GCPlayerView.prototype.player.playPause = function(){
     else{
         this.playerInstance.pause();
     }
+    this.showHidePlayPauseButton();
+};
+
+GCPlayerView.prototype.player.play = function(){
+    "use strict";
+    if(this.playerInstance.paused===true){
+        this.playerInstance.play();
+    }
+    this.showHidePlayPauseButton();
+};
+
+GCPlayerView.prototype.player.pause = function(){
+    "use strict";
+    if(this.playerInstance.paused===false){
+        this.playerInstance.pause();
+    }
+    this.showHidePlayPauseButton();
 };
 
 GCPlayerView.prototype.player.setCurrentTime = function(seconds){
@@ -102,4 +125,18 @@ GCPlayerView.prototype.player.toMinuteSecondsFormat = function(seconds){
         time += minutes+":"+secs;
     }
     return time;
+};
+
+GCPlayerView.prototype.player.showHidePlayPauseButton = function(){
+    "use strict";
+    var playButton = document.getElementById('play');
+    var pauseButton = document.getElementById('pause');
+    if(this.playerInstance.paused===true){
+        playButton.dataset.enabled = true;
+        pauseButton.dataset.enabled = false;
+    }
+    else{
+        playButton.dataset.enabled = false;
+        pauseButton.dataset.enabled = true;
+    }
 };

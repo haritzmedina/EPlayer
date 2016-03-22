@@ -147,6 +147,22 @@ a{
 #playerProgressBar:hover{
     height: 1.5em;
 }
+
+#play[data-enabled=true]{
+    display: inline;
+}
+
+#play[data-enabled=false]{
+    display: none;
+}
+
+#pause[data-enabled=true]{
+    display: inline;
+}
+
+#pause[data-enabled=false]{
+    display: none;
+}
 /**/
 
 #searchWrapper{

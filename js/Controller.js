@@ -47,13 +47,13 @@ GCPlayerController.prototype.initHandlers = function(){
     playerProgressbar.addEventListener('click', function(event){
         // TODO When progress bar is bigger not the whole bar is touchable (Y coord)
         // Get value on progress bar
+        console.log(this.offsetTop);
         var x = event.pageX - this.offsetLeft,
             y = event.pageY - this.offsetTop,
             clickedValue = x * this.max / this.offsetWidth;
         // Move the playing song
         window.GCPlayer.view.player.setCurrentTime(clickedValue);
     });
-
 
     // Music player handlers
     player.addEventListener('ended', function(event){
@@ -72,6 +72,24 @@ GCPlayerController.prototype.initHandlers = function(){
             window.GCPlayer.controller.player.playPreviousSong();
         }
     });
+
+    // Player wrapper events
+    document.getElementById('play').addEventListener("click", function(){
+        window.GCPlayer.controller.player.play();
+    });
+
+    document.getElementById('pause').addEventListener("click", function(){
+        window.GCPlayer.controller.player.pause();
+    });
+    document.getElementById('next').addEventListener("click", function(){
+        window.GCPlayer.controller.player.playNextSong();
+    });
+    document.getElementById('previous').addEventListener("click", function(){
+        window.GCPlayer.controller.player.playPreviousSong();
+    });
+    document.getElementById('repeat').addEventListener("click", function(){
+        
+    });
 };
 
 GCPlayerController.prototype.player = {};
@@ -79,6 +97,22 @@ GCPlayerController.prototype.player = {};
 GCPlayerController.prototype.player.playPause = function(){
     "use strict";
     window.GCPlayer.view.player.playPause();
+};
+
+GCPlayerController.prototype.player.play = function(){
+    "use strict";
+    // TODO Check if it is interesting to start playing randomly/sequently music
+    if(jQuery.isEmptyObject(window.GCPlayer.model.playlist.songs)){
+        window.GCPlayer.model.playlist.createRandom(window.GCPlayer.model.library.getSongArray(), true);
+    }
+    else {
+        window.GCPlayer.view.player.play();
+    }
+};
+
+GCPlayerController.prototype.player.pause = function(){
+    "use strict";
+    window.GCPlayer.view.player.pause();
 };
 
 GCPlayerController.prototype.player.playNextSong = function(){

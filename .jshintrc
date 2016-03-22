@@ -12,7 +12,7 @@
     "GCPlayerView": true,
     "chrome": true,
     "$": true,
-    "jsmediatags": true
+    "id3": true
   },
   "indent": 4
 }
