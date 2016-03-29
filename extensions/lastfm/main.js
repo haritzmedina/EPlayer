@@ -3,21 +3,23 @@
     window.GCPlayer.controller.extensions.loadScript("lastfm/cjs.js");
 
     function waitForLastfmLoaded(resolve, reject){
-        if(typeof LastFM !== 'undefined'){
-            console.log("LastFM library not loaded yet");
-            setTimeout(function(){
+        setTimeout(function(){
+            if(typeof LastFM === 'undefined') {
                 waitForLastfmLoaded(resolve, reject);
-            },500);
-        }
-        else{
-            console.log("LastFM library loaded");
-            setTimeout(function(){
+                console.log("LastFM library not loaded yet.");
+            }
+            else{
+                console.log("LastFM library loaded");
                 resolve(true);
-            }, 500);
-        }
+            }
+        },500);
     }
+
     var promise = new Promise(function(resolve, reject){
+        
         window.GCPlayer.controller.extensions.loadScript("lastfm/lastfm.js");
+        // Load MD5 library
+        window.GCPlayer.controller.extensions.loadScript("lastfm/md5.js");
         waitForLastfmLoaded(resolve, reject);
     });
 
