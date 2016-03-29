@@ -1,0 +1,24 @@
+{
+  "extensions": [
+    {
+      "name": "Lyrics for GCPlayer",
+      "description": "Adds lyrics for current song, downloaded from multiple resources",
+      "id": "lyrics",
+      "enableEntryPoint": "lyrics/main.js",
+      "disableEntryPoint": "lyrics/clean.js",
+      "version": "0.1",
+      "compatibleVersion": "0.1",
+      "author": "Haritz Medina"
+    },
+    {
+      "name": "LastFM scrobbler for GCPlayer",
+      "description": "LastFM current song scrobbler",
+      "id": "lastfm",
+      "enableEntryPoint": "lastfm/main.js",
+      "disableEntryPoint": "lastfm/clean.js",
+      "version": "0.1",
+      "compatibleVersion": "0.1",
+      "author": "Haritz Medina"
+    }
+  ]
+}

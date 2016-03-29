@@ -2,14 +2,15 @@
 
 /* Let's get this party started */
 ::-webkit-scrollbar {
-    width: 14px;
+    width: 1em;
+    cursor: pointer;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(125,125,125,0.3);
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
+    -webkit-border-radius: 0.2em;
+    border-radius: 0.2em;
     cursor: pointer;
 }
 
@@ -18,7 +19,7 @@
     -webkit-border-radius: 10px;
     border-radius: 10px;
     background: rgba(0,100,200,0.8);
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+    -webkit-box-shadow: inset 0 0 0.1em rgba(0,0,0,0.5);
 }
 ::-webkit-scrollbar-thumb:window-inactive {
     background: rgba(0,70,140,0.4);
@@ -41,7 +42,7 @@ a{
 }
 
 #menu{
-    max-width: 7em;
+    max-width: 5em;
     min-height: 100%;
     max-height: 100%;
     left: 0;
@@ -56,41 +57,62 @@ a{
     width: calc(100% - 10em);
 }
 
-#playerWrapper{
-    height: 10em;
-    bottom: 0;
-    position: absolute;
-}
-
 /* Lateral menu */
 
 .menuElement{
     float: none;
-    width: 5em;
+    width: 4.5em;
     display:block;
+    height: 4.5em;
+    border-radius: 5px;
+    margin: 0.25em;
+    cursor: pointer;
+    margin-bottom: 0.5em;
+}
+
+.menuElement:hover{
+    border-radius: 5px;
 }
 
 #librarySelector{
     background-color: rgba(200, 49, 107, 1);
-    border-radius: 3px;
+    background-image: url(../img/library.png);
+    background-size: 4.5em 4.5em;
 }
 
 #librarySelector:hover{
     background-color: rgba(200, 11, 81, 1);
 }
 
-.menuElement > img:hover{
-    background-color: inherit;
+
+#playlistSelector{
+    background-color: rgba(50, 125, 200, 1);
+    background-image: url(../img/playlist.png);
+    background-size: 4.5em 4.5em;
 }
 
-.menuElement > img{
-    width: 90%;
-    padding-left: 5%;
-    padding-right: 5%;
+#playlistSelector:hover{
+    background-color: rgba(40, 78, 200, 1);
+}
+
+#settingsSelector{
+    background-color: rgba(160, 160, 40, 1);
+    background-image: url(../img/settings.png);
+    background-size: 4.5em 4.5em;
+}
+
+#settingsSelector:hover{
+    background-color: rgba(120, 120, 20, 1);
 }
 
 #expandSelector{
-    bottom: 0;
+    background-color: rgba(0, 0, 0, 1);
+    background-image: url(../img/expand.png);
+    background-size: 4.5em 4.5em;
+}
+
+#expandSelector:hover{
+    background-color: rgba(0, 0, 0, 1);
 }
 
 /* Content */
@@ -101,16 +123,12 @@ a{
     padding-bottom: 0.5em;
 }
 
-/* Library */
-.songElement{
-    height: 2em;
-    width: 100%;
-}
-
 /* Player wrapper */
 #playerWrapper{
     bottom: 0;
     width:100%;
+    height: 10em;
+    position: absolute;
 }
 
 #playerControl{
@@ -163,19 +181,88 @@ a{
 #pause[data-enabled=false]{
     display: none;
 }
-/**/
 
-#searchWrapper{
+.contentContainer[data-enabled="false"]{
+    display:none;
+}
+
+/* Library */
+
+#libraryContainer{
+    overflow: hidden;
+    height: 100%;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+#librarySearchWrapper{
     height: 5em;
 }
 
-#search{
+#librarySearch{
     font-size: 3em;
     text-align: center;
 }
 
-#searchResults{
+#librarySearchResults{
     overflow-y: auto;
     width: 100%;
     height: calc(100% - 5em);
+}
+
+.librarySongElement{
+    height: 2.5em;
+    width: calc(100% - 0.25em - 0.1em - 0.3em); /* 100% - padding - border - scrollbar */
+    border: 0.1em solid rgba(125, 125, 125, 0.6);
+    border-radius: 5px;
+    padding: 0.25em;
+    margin-top: 0.5em;
+}
+
+.librarySongElement:hover{
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.librarySongText{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.librarySongElementTitle{
+    width: calc(30% - 0.5em);
+    float: left;
+    font-size: 1.5em;
+}
+
+.librarySongElementArtist{
+    width: 30%;
+    float: left;
+    font-size: 1.5em;
+}
+
+.librarySongElementAlbum{
+    width: 30%;
+    float: left;
+    font-size: 1.5em;
+}
+
+.librarySongControl{
+    cursor: pointer;
+    width: 1.5em;
+    display:block;
+    float:left;
+    margin-top: 0.5em;
+    height: 1.5em;
+    background-size: 1.5em 1.5em;
+    margin-right: 0.25em;
+    margin-left: 0.25em;
+}
+
+.librarySongPlayButton{
+    background-image: url(../img/play.png);
+}
+
+.librarySongAddPlaylist{
+    background-image: url(../img/add_playlist.png);
 }

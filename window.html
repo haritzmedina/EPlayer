@@ -13,27 +13,73 @@
 </head>
 <body>
     <div id="menu">
-        <a id="librarySelector" class="menuElement"><img src="/img/library.png" title="Library" alt="Library"></a>
-        <a id="playlistSelector" class="menuElement"><img src="/img/playlist.png" title="Playlists" alt="Playlist"></a>
-        <a id="settingsSelector" class="menuElement"><img src="/img/settings.png"  title="Settings" alt="Settings"></a>
-        <a id="expandSelector" class="menuElement"><img src="/img/expand.png" title="Expand menu" alt="Expand lateral menu"></a>
+        <span id="librarySelector" class="menuElement menuSelector" data-associated-container="libraryContainer" title="Library">
+        </span>
+        <span id="playlistSelector" class="menuElement menuSelector" data-associated-container="playlistContainer" title="Playlists">
+        </span>
+        <span id="settingsSelector" class="menuElement menuSelector" data-associated-container="settingsContainer" title="Settings">
+        </span>
+        <span id="expandSelector" class="menuElement" title="Expand menu">
+        </span>
     </div>
+
     <div id="content">
-        <div id="searchWrapper">
-            <input id="search" type="search" placeholder="Search for song"/>
+        <div id="libraryContainer" class="contentContainer">
+            <div id="librarySearchWrapper">
+                <input id="librarySearch" type="search" placeholder="Search for song"/>
+            </div>
+            <div id="librarySearchResults">
+                <!-- Here will be added song results -->
+            </div>
+            <template id="librarySongElement">
+                <div class="librarySongElement">
+                    <span class="librarySongControl librarySongPlayButton" title="Play"></span>
+                    <span class="librarySongControl librarySongAddPlaylist" title="Add playlist"></span>
+                    <span class="librarySongText librarySongElementArtist"></span>
+                    <span class="librarySongText librarySongElementTitle"></span>
+                    <span class="librarySongText librarySongElementAlbum"></span>
+                </div>
+            </template>
         </div>
-        <div id="searchResults">
-            <!-- Here will be added song results -->
+        <div id="playlistContainer" class="contentContainer" data-enabled="false">
+            <div id="playlistSearchWrapper">
+                <input id="playlistSearch" type="search" placeholder="Search for song"/>
+            </div>
+            <div id="playlistSearchResults">
+                <!-- Here will be added song results -->
+            </div>
+        </div>
+        <div id="settingsContainer" class="contentContainer" data-enabled="false">
+            <div id="settingsLibrary">
+                <span id="settingsLibraryAddFolder" title="Add songs folder to library"></span>
+                <div id="settingsLibraryCurrentFolders">
+
+                </div>
+            </div>
+            <div id="extensions">
+                <template id="extension">
+                    <div class="extension">
+                        <span class="extensionName"></span>
+                        <span class="extensionDescription"></span>
+                        <span class="extensionVersion"></span>
+                        <span class="extensionAuthor"></span>
+                        <input type="checkbox" class="extensionEnabled"/>
+                    </div>
+                </template>
+            </div>
+        </div>
+        <div id="songInfoContainer" class="contentContainer" data-enabled="false">
+
         </div>
     </div>
     <div id="playerWrapper">
-        <a class="playerControl"><img id="previous" src="/img/previous.png" title="previous"></a>
-        <a class="playerControl"><img id="play" data-enabled="true" src="/img/play.png" title="play"></a>
-        <a class="playerControl"><img id="pause" data-enabled="false" src="/img/pause.png" title="pause"></a>
-        <a class="playerControl"><img id="next" src="/img/next.png" title="next"></a>
-        <a class="playerControl"><img id="repeat" data-activated="false" src="/img/repeat.png" title="repeat"></a>
-        <a class="playerControl"><img id="shuffle" data-activated="true" src="/img/shuffle.png" title="shuffle"></a>
-        <span id="playerTimeValue"></span>/<span id="playerTimeMax"></span>
+        <a class="playerControl" id="previous"><img src="/img/previous.png" title="previous"></a>
+        <a class="playerControl" id="play" data-enabled="true"><img src="/img/play.png" title="play"></a>
+        <a class="playerControl" id="pause" data-enabled="false"><img src="/img/pause.png" title="pause"></a>
+        <a class="playerControl" id="next"><img src="/img/next.png" title="next"></a>
+        <a class="playerControl" id="repeat" data-activated="false"><img src="/img/repeat.png" title="repeat"></a>
+        <a class="playerControl" id="shuffle" data-activated="true"><img src="/img/shuffle.png" title="shuffle"></a>
+        <span id="playerTimeValue">--:--</span>/<span id="playerTimeMax">--:--</span>
         <progress id="playerProgressBar"></progress>
         <span id="playingSongInfo">
             <span id="album"></span>

@@ -8,6 +8,7 @@ GCPlayerModel.prototype.storage = {};
 
 GCPlayerModel.prototype.storage.libraryFolder = "library.folders";
 GCPlayerModel.prototype.storage.librarySongs = "library.songs";
+GCPlayerModel.prototype.storage.configExtensions = "config.extensions";
 
 /**
  * Initialization of model class (load configuration and prepare model environment)
@@ -30,14 +31,21 @@ GCPlayerModel.prototype.setInitialModel = function(){
     // Library folders
     this.getParams(window.GCPlayer.model.storage.libraryFolder, function(result){
         if(jQuery.isEmptyObject(result)){
-            window.GCPlayer.model.setParams({"library.folders" : []});
+            window.GCPlayer.model.setParams({"library.folders" : []}, function(){}, false);
         }
     });
 
     // Library songs
     this.getParams(window.GCPlayer.model.storage.librarySongs, function(result){
         if(jQuery.isEmptyObject(result)){
-            window.GCPlayer.model.setParams({"library.songs" : {}});
+            window.GCPlayer.model.setParams({"library.songs" : {}}, function(){}, false);
+        }
+    });
+
+    // Extensions config
+    this.getParams(window.GCPlayer.model.storage.configExtensions, function(result){
+        if(jQuery.isEmptyObject(result)){
+            window.GCPlayer.model.setParams({"config.extensions" : []}, function(){}, false);
         }
     });
 };
@@ -57,6 +65,7 @@ GCPlayerModel.prototype.loadSavedModel = function(){
                 console.log("Loading content folder for "+folder.absolutePath);
                 window.GCPlayer.model.library.loadFolder(folder);
             }
+            // TODO Display songs only once (when all folders are read) [ LOOK loadFolder promise ]
         }
         else{
             // TODO Show welcome message on screen
@@ -66,12 +75,13 @@ GCPlayerModel.prototype.loadSavedModel = function(){
 
 GCPlayerModel.prototype.playSong = function(song){
     "use strict";
-    // TODO current song view update
+    // Current song view update
     song.file.file(function(file){
         console.log(file);
         var reader = new FileReader();
         reader.onload = function(){
             var dataURL = reader.result;
+            window.GCPlayer.model.currentSong = song;
             window.GCPlayer.view.playSong(song, dataURL);
         };
         reader.readAsDataURL(file);
@@ -113,8 +123,8 @@ GCPlayerModel.prototype.library.loadFolder = function(libraryFolder){
                         });
                     });
                     updateSongsPromise.then(function(){
-                        // TODO Display songs in library container
-                        window.GCPlayer.view.displaySearchSongs(window.GCPlayer.model.library.getSongArray());
+                        // Display songs in library container
+                        window.GCPlayer.view.displayLibrarySearchSongs(window.GCPlayer.model.library.getSongArray());
                     });
 
 
@@ -143,7 +153,7 @@ GCPlayerModel.prototype.library.addFolder = function(libraryFolder, libraryPath)
         }
         // If folder is not added, add and save it to chrome storage
         storedFolders.push(new Folder(folderPoint, folderPath));
-        window.GCPlayer.model.setParams({"library.folders" : storedFolders}, false);
+        window.GCPlayer.model.setParams({"library.folders" : storedFolders}, function(){}, false);
     }, false);
 };
 
@@ -168,7 +178,7 @@ GCPlayerModel.prototype.library.updateSongs = function(songs, libraryFolder, cal
         }
         Promise.all(promises).then(function(result){
             var storedSongs = window.GCPlayer.model.library.songs;
-            window.GCPlayer.model.setParams({"library.songs": storedSongs}, false);
+            window.GCPlayer.model.setParams({"library.songs": storedSongs}, function(){}, false);
             console.log("Songs from "+ folder.absolutePath +" updated.");
             callback();
         }).catch(function(result){
@@ -241,13 +251,23 @@ GCPlayerModel.prototype.library.setSongParam = function(songId, param, value){
     }
 };
 
-GCPlayerModel.prototype.library.getSongArray = function() {
+GCPlayerModel.prototype.library.getSongArray = function(){
     "use strict";
     var arr = [];
     for (var key in this.songs) {
         arr.push(this.songs[key]);
     }
     return arr;
+};
+
+GCPlayerModel.prototype.library.getSongById = function(songId){
+    "use strict";
+    if(!jQuery.isEmptyObject(this.songs[songId])){
+        return this.songs[songId];
+    }
+    else{
+        return null;
+    }
 };
 
 GCPlayerModel.prototype.fileSystem = {};
@@ -257,12 +277,15 @@ GCPlayerModel.prototype.fileSystem.id3tags = function(fileEntry, callback){
 };
 
 // Chrome storage functions
-GCPlayerModel.prototype.setParams = function (x, wantSync) {
+GCPlayerModel.prototype.setParams = function (x, callback, wantSync) {
     var storageArea = wantSync ? chrome.storage.sync : chrome.storage.local;
     storageArea.set(x,
         function () {
             if (chrome.runtime.lastError){
                 console.log(chrome.runtime.lastError);
+            }
+            else{
+                callback();
             }
         }
     );
@@ -447,6 +470,53 @@ GCPlayerModel.prototype.playlist.create = function(songs, autoplay){
         }
     }
 };
+
+GCPlayerModel.prototype.extensions = {};
+
+GCPlayerModel.prototype.extensions.updateModel = function(extensions, callback){
+    "use strict";
+    // Save model
+    window.GCPlayer.model.extensions.data = extensions;
+    // TODO Retrieve config in sync storage
+    window.GCPlayer.model.getParams(window.GCPlayer.model.storage.configExtensions, function(result){
+        var storedExtensions = result["config.extensions"];
+        // Find if previous config of extension is set
+        for(var i=0;i<extensions.length;i++){
+            for(var j=0;j<storedExtensions.length;j++){
+                if(extensions[i].id===storedExtensions[j].id){
+                    extensions[i].enabled = storedExtensions.enabled;
+                }
+            }
+            // If previous value of extension is not found, set it to enabled
+            if(jQuery.isEmptyObject(extensions[i].enabled)){
+                extensions[i].enabled = true;
+            }
+        }
+        window.GCPlayer.model.extensions.data = extensions;
+        window.GCPlayer.model.setParams({"config.extensions": extensions}, function(){
+            callback(window.GCPlayer.model.extensions.data); // TODO callback when data is stored
+        }, true);
+    });
+
+    // Display in settings
+    window.GCPlayer.view.configuration.displayExtensions(window.GCPlayer.model.extensions.data);
+};
+
+GCPlayerModel.prototype.extensions.getExtensions = function(extensions){
+    "use strict";
+
+};
+
+GCPlayerModel.prototype.extensions.enableExtension = function(id){
+    "use strict";
+
+};
+
+GCPlayerModel.prototype.extensions.disableExtension = function(id){
+    "use strict";
+
+};
+
 
 
 var Song = function(filename, folder, file, title, artist, album, updatedDate){

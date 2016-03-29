@@ -90,8 +90,30 @@ GCPlayerController.prototype.initHandlers = function(){
     document.getElementById('repeat').addEventListener("click", function(){
         
     });
+
+
+    // Library content events
+    $("#libraryContainer").on("click", ".librarySongPlayButton", function(event) {
+        var songId = event.target.parentNode.dataset.songId;
+        var song = window.GCPlayer.model.library.getSongById(songId);
+        window.GCPlayer.controller.play(song);
+    });
+
+
+    // Menu events
+    $("#menu").on("click", ".menuSelector", function(event){
+        var containerId = event.target.dataset.associatedContainer;
+        console.log(containerId);
+        var container = document.getElementById(containerId);
+        console.log(container);
+        window.GCPlayer.controller.menu.enableContainer(container);
+    });
 };
 
+
+/**
+ * Music player behaviour
+ */
 GCPlayerController.prototype.player = {};
 
 GCPlayerController.prototype.player.playPause = function(){
@@ -127,4 +149,49 @@ GCPlayerController.prototype.player.playPreviousSong = function(){
     if(window.GCPlayer.model.playlist.hasPreviousSong()){
         window.GCPlayer.model.playlist.playPreviousSong();
     }
+};
+
+/**
+ * Menu behaviour
+ */
+GCPlayerController.prototype.menu = {};
+
+GCPlayerController.prototype.menu.enableContainer = function(container){
+    "use strict";
+    window.GCPlayer.view.menu.enableContainer(container);
+};
+
+
+GCPlayerController.prototype.extensions = {};
+
+GCPlayerController.prototype.extensions.init = function(){
+    "use strict";
+    var extensionsFilePromise = new Promise(function(resolve, reject){
+        $.getJSON("extensions/extensions.json", function(result){
+            // Save extensions to model
+            window.GCPlayer.model.extensions.updateModel(result.extensions, function(extensions){
+                resolve(extensions);
+            });
+        });
+    });
+    extensionsFilePromise.then(function(extensions){
+        // Initialize extensions
+        for(var i=0;i<extensions.length;i++){
+            // TODO Check if extensions are enabled and call for code
+            var extension = extensions[i];
+            window.GCPlayer.controller.extensions.loadScript(extension.enableEntryPoint);
+        }
+    });
+};
+
+GCPlayerController.prototype.extensions.loadScript = function(extensionRelPath){
+    "use strict";
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.charset = 'utf-8';
+    script.defer = true;
+    script.async = true;
+    var head = document.getElementsByTagName('head')[0];
+    script.src = "extensions/"+extensionRelPath;
+    head.appendChild(script);
 };

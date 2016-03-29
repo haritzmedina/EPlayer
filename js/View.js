@@ -23,23 +23,32 @@ GCPlayerView.prototype.playSong = function(song, url){
     infoContainer.querySelector("#album").innerText = song.album;
 };
 
-GCPlayerView.prototype.displaySearchSongs = function(songs){
+GCPlayerView.prototype.displayLibrarySearchSongs = function(songs){
     "use strict";
     console.log("Displaying songs");
-    var resultsDiv = document.getElementById('searchResults');
-    resultsDiv.innerHTML = ""; // Clean space
+    var resultsDiv = document.getElementById('librarySearchResults');
+    resultsDiv.innerHTML = ""; // Clean results container
     for(var i=0;i<songs.length;i++){
         var song = songs[i];
-        this.displaySong(song, resultsDiv);
+        this.displayLibrarySongElement(song, resultsDiv);
     }
 };
 
-GCPlayerView.prototype.displaySong = function(song, container){
+GCPlayerView.prototype.displayLibrarySongElement = function(song, container){
     "use strict";
-    var div = document.createElement('div');
-    div.classList.add('songElement');
-    div.textContent = song.artist+"-"+song.title;
-    container.appendChild(div);
+    // TODO Display song using librarySongElement template
+    var template = document.querySelector("#librarySongElement");
+    var content = document.importNode(template.content, true);
+
+    var songDiv = content.querySelector(".librarySongElement");
+    songDiv.dataset.songId = song.folder+"#"+song.filename;
+    var artistDiv = content.querySelector(".librarySongElementArtist");
+    artistDiv.innerText = song.artist;
+    var albumDiv = content.querySelector(".librarySongElementAlbum");
+    albumDiv.innerText = song.album;
+    var titleDiv = content.querySelector(".librarySongElementTitle");
+    titleDiv.innerText = song.title;
+    container.appendChild(content);
 };
 
 //// Player controls
@@ -138,5 +147,41 @@ GCPlayerView.prototype.player.showHidePlayPauseButton = function(){
     else{
         playButton.dataset.enabled = false;
         pauseButton.dataset.enabled = true;
+    }
+};
+
+GCPlayerView.prototype.menu = {};
+
+GCPlayerView.prototype.menu.enableContainer = function(container){
+    "use strict";
+    // Disable all the containers
+    var containers = document.getElementsByClassName("contentContainer");
+    for(var i=0; i<containers.length;i++){
+        containers[i].dataset.enabled = false;
+    }
+    // Enable the selected container
+    container.dataset.enabled = true;
+};
+
+GCPlayerView.prototype.configuration = {};
+
+GCPlayerView.prototype.configuration.displayExtensions = function(extensions){
+    "use strict";
+    var template = document.querySelector("#extension");
+    var container = document.getElementById("extensions");
+    for(var i=0;i<extensions.length;i++){
+        var extension = extensions[i];
+        var content = document.importNode(template.content, true);
+        var nameContainer = content.querySelector(".extensionName");
+        nameContainer.innerText = extension.name;
+        var descriptionContainer = content.querySelector(".extensionDescription");
+        descriptionContainer.innerText = extension.description;
+        var versionContainer = content.querySelector(".extensionVersion");
+        versionContainer.innerText = extension.version;
+        var authorContainer = content.querySelector(".extensionAuthor");
+        authorContainer.innerText = extension.author;
+        var enabledCheckbox = content.querySelector(".extensionEnabled");
+        enabledCheckbox.checked = extension.enabled;
+        container.appendChild(content);
     }
 };
