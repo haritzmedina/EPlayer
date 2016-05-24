@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "GCPlayer",
+    "description": "The name of the application"
+  },
+  "appDescription": {
+    "message": "A google chrome music player",
+    "description": "The description of the application"
+  }
+}

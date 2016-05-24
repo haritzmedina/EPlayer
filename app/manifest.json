@@ -1,0 +1,57 @@
+{
+  "manifest_version": 2,
+
+  "name": "Google chrome player",
+  "description": "A music player for google chrome.",
+  "version": "0.1",
+
+  "app": {
+    "background": {
+      "scripts": ["scripts/background.js"]
+    }
+  },
+
+  "default_locale": "en",
+
+  "icons": {
+    "16": "icon.png",
+    "128": "icon.png"
+  },
+
+  "permissions": [
+    {"fileSystem": ["retainEntries", "directory"]},
+    "unlimitedStorage",
+    "storage"
+  ],
+
+  "commands": {
+    "playPause": {
+      "suggested_key": {
+        "default": "MediaPlayPause"
+      },
+      "global": true,
+      "description": "Toggle play/pause"
+    },
+    "previousSong": {
+      "suggested_key": {
+        "default": "MediaPrevTrack"
+      },
+      "global": true,
+      "description": "Previous song"
+    },
+    "nextSong": {
+      "suggested_key": {
+        "default": "MediaNextTrack"
+      },
+      "global": true,
+      "description": "Next song"
+    },
+    "stop": {
+      "suggested_key": {
+        "default": "MediaStop"
+      },
+      "global": true,
+      "description": "Stop all players"
+    }
+  }
+}
