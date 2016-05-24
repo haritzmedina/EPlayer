@@ -9,6 +9,7 @@ GCPlayerModel.prototype.storage = {};
 GCPlayerModel.prototype.storage.libraryFolder = "library.folders";
 GCPlayerModel.prototype.storage.librarySongs = "library.songs";
 GCPlayerModel.prototype.storage.configExtensions = "config.extensions";
+GCPlayerModel.prototype.storage.extensions = "extensions";
 
 /**
  * Initialization of model class (load configuration and prepare model environment)
@@ -476,7 +477,7 @@ GCPlayerModel.prototype.extensions = {};
 GCPlayerModel.prototype.extensions.updateModel = function(extensions, callback){
     "use strict";
     // Save model
-    window.GCPlayer.model.extensions.data = extensions;
+    window.GCPlayer.model.extensions.metadata = extensions;
     // TODO Retrieve config in sync storage
     window.GCPlayer.model.getParams(window.GCPlayer.model.storage.configExtensions, function(result){
         var storedExtensions = result["config.extensions"];
@@ -492,14 +493,14 @@ GCPlayerModel.prototype.extensions.updateModel = function(extensions, callback){
                 extensions[i].enabled = true;
             }
         }
-        window.GCPlayer.model.extensions.data = extensions;
+        window.GCPlayer.model.extensions.metadata = extensions;
         window.GCPlayer.model.setParams({"config.extensions": extensions}, function(){
-            callback(window.GCPlayer.model.extensions.data); // TODO callback when data is stored
+            callback(window.GCPlayer.model.extensions.metadata); // TODO callback when data is stored
         }, true);
     });
 
     // Display in settings
-    window.GCPlayer.view.configuration.displayExtensions(window.GCPlayer.model.extensions.data);
+    window.GCPlayer.view.configuration.displayExtensions(window.GCPlayer.model.extensions.metadata);
 };
 
 GCPlayerModel.prototype.extensions.getExtensions = function(extensions){
@@ -516,6 +517,9 @@ GCPlayerModel.prototype.extensions.disableExtension = function(id){
     "use strict";
 
 };
+
+// Data container for extensions
+GCPlayerModel.prototype.extensions.data = {};
 
 
 

@@ -46,7 +46,7 @@ LastFM.retrieveWebServiceSession = function(token, callback){
         type: "POST",
         url: "http://ws.audioscrobbler.com/2.0/?method=auth.getSession&api_key="+this.apiKey+"&format=json",
         data: {
-            api_key: this.api_key, // TODO revise if needed
+            api_key: this.api_key, // TODO review if needed
             token: token,
             api_sig: api_sig
         }
@@ -96,6 +96,5 @@ LastFM.getApiSig = function(properties, secret){
         sig += key+properties[key];
     }
     sig += secret;
-    console.log(sig);
     return md5(sig);
 };

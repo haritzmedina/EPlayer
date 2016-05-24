@@ -21,6 +21,7 @@ GCPlayerView.prototype.playSong = function(song, url){
     infoContainer.querySelector("#artist").innerText = song.artist;
     infoContainer.querySelector("#title").innerText = song.title;
     infoContainer.querySelector("#album").innerText = song.album;
+    this.player.dispatchEvent(window.GCPlayer.controller.songChangeEvent);
 };
 
 GCPlayerView.prototype.displayLibrarySearchSongs = function(songs){

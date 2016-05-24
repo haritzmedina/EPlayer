@@ -8,11 +8,15 @@ var GCPlayerController = function (){
 
 GCPlayerController.prototype.init = function(){
     "use strict";
+    // Load handlers
     this.initHandlers();
+    // Load model
     window.GCPlayer.model.init();
+    // Load extensions
+    window.GCPlayer.controller.extensions.init();
 };
 
-GCPlayerController.prototype.setMusicDirectory = function(){
+GCPlayerController.prototype.addMusicDirectory = function(){
     "use strict";
     chrome.fileSystem.chooseEntry({type: 'openDirectory'}, function(dirEntry){
         // Save new folder reference on model
@@ -29,6 +33,18 @@ GCPlayerController.prototype.play = function(song){
     "use strict";
     window.GCPlayer.model.playSong(song);
 };
+
+GCPlayerController.prototype.songChangeEvent = new CustomEvent(
+    "currentSongChanged",
+    {
+        detail: {
+            message: "Song is changed",
+            time: new Date()
+        },
+        bubbles: true,
+        cancelable: true
+    }
+);
 
 GCPlayerController.prototype.initHandlers = function(){
     "use strict";
@@ -108,6 +124,8 @@ GCPlayerController.prototype.initHandlers = function(){
         console.log(container);
         window.GCPlayer.controller.menu.enableContainer(container);
     });
+
+
 };
 
 
@@ -118,7 +136,12 @@ GCPlayerController.prototype.player = {};
 
 GCPlayerController.prototype.player.playPause = function(){
     "use strict";
-    window.GCPlayer.view.player.playPause();
+    if(jQuery.isEmptyObject(window.GCPlayer.model.playlist.songs)){
+        this.play();
+    }
+    else{
+        window.GCPlayer.view.player.playPause();
+    }
 };
 
 GCPlayerController.prototype.player.play = function(){
@@ -184,7 +207,7 @@ GCPlayerController.prototype.extensions.init = function(){
     });
 };
 
-GCPlayerController.prototype.extensions.loadScript = function(extensionRelPath){
+GCPlayerController.prototype.extensions.loadScript = function(scriptRelPath){
     "use strict";
     var script = document.createElement('script');
     script.type = 'text/javascript';
@@ -192,6 +215,16 @@ GCPlayerController.prototype.extensions.loadScript = function(extensionRelPath){
     script.defer = true;
     script.async = true;
     var head = document.getElementsByTagName('head')[0];
-    script.src = "extensions/"+extensionRelPath;
+    script.src = "extensions/"+scriptRelPath;
     head.appendChild(script);
+};
+
+GCPlayerController.prototype.extensions.loadCss = function(cssRelPath){
+    "use strict";
+    var link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.type = "text/css";
+    link.href = "extensions/"+cssRelPath;
+    var head = document.getElementsByTagName('head')[0];
+    head.appendChild(link);
 };

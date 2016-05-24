@@ -1,0 +1,27 @@
+#lastfmSelector{
+    background-color: rgba(200, 49, 107, 1);
+    background-image: url(./lastfm.png);
+    background-size: 4.5em 4.5em;
+}
+
+#lastfmSelector:hover{
+    background-color: rgba(200, 11, 81, 1);
+}
+
+
+#lastfm-loginContainer[data-enabled=false]{
+    display: none;
+}
+
+#lastfm-loggedContainer[data-enabled=false]{
+    display: none;
+}
+
+
+#lastfm-loginQuestion[data-enabled=false]{
+    display: none;
+}
+
+#lastfm-authentication-help{
+    display: none;
+}
