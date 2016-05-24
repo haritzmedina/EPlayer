@@ -3,11 +3,11 @@
  */
 
 var GCPlayerController = function (){
-    "use strict";
+    'use strict';
 };
 
 GCPlayerController.prototype.init = function(){
-    "use strict";
+    'use strict';
     // Load handlers
     this.initHandlers();
     // Load model
@@ -17,7 +17,7 @@ GCPlayerController.prototype.init = function(){
 };
 
 GCPlayerController.prototype.addMusicDirectory = function(){
-    "use strict";
+    'use strict';
     chrome.fileSystem.chooseEntry({type: 'openDirectory'}, function(dirEntry){
         // Save new folder reference on model
         var folderPointer = chrome.fileSystem.retainEntry(dirEntry);
@@ -30,15 +30,15 @@ GCPlayerController.prototype.addMusicDirectory = function(){
 };
 
 GCPlayerController.prototype.play = function(song){
-    "use strict";
+    'use strict';
     window.GCPlayer.model.playSong(song);
 };
 
 GCPlayerController.prototype.songChangeEvent = new CustomEvent(
-    "currentSongChanged",
+    'currentSongChanged',
     {
         detail: {
-            message: "Song is changed",
+            message: 'Song is changed',
             time: new Date()
         },
         bubbles: true,
@@ -47,7 +47,7 @@ GCPlayerController.prototype.songChangeEvent = new CustomEvent(
 );
 
 GCPlayerController.prototype.initHandlers = function(){
-    "use strict";
+    'use strict';
 
     // Progress bar handlers
     var player = document.getElementById('player');
@@ -78,38 +78,38 @@ GCPlayerController.prototype.initHandlers = function(){
 
     // Multimedia keys
     chrome.commands.onCommand.addListener(function(command){
-        if(command==="playPause"){
+        if(command==='playPause'){
             window.GCPlayer.controller.player.playPause();
         }
-        if(command==="nextSong"){
+        if(command==='nextSong'){
             window.GCPlayer.controller.player.playNextSong();
         }
-        if(command==="previousSong"){
+        if(command==='previousSong'){
             window.GCPlayer.controller.player.playPreviousSong();
         }
     });
 
     // Player wrapper events
-    document.getElementById('play').addEventListener("click", function(){
+    document.getElementById('play').addEventListener('click', function(){
         window.GCPlayer.controller.player.play();
     });
 
-    document.getElementById('pause').addEventListener("click", function(){
+    document.getElementById('pause').addEventListener('click', function(){
         window.GCPlayer.controller.player.pause();
     });
-    document.getElementById('next').addEventListener("click", function(){
+    document.getElementById('next').addEventListener('click', function(){
         window.GCPlayer.controller.player.playNextSong();
     });
-    document.getElementById('previous').addEventListener("click", function(){
+    document.getElementById('previous').addEventListener('click', function(){
         window.GCPlayer.controller.player.playPreviousSong();
     });
-    document.getElementById('repeat').addEventListener("click", function(){
+    document.getElementById('repeat').addEventListener('click', function(){
         
     });
 
 
     // Library content events
-    $("#libraryContainer").on("click", ".librarySongPlayButton", function(event) {
+    $('#libraryContainer').on('click', '.librarySongPlayButton', function(event) {
         var songId = event.target.parentNode.dataset.songId;
         var song = window.GCPlayer.model.library.getSongById(songId);
         window.GCPlayer.controller.play(song);
@@ -117,7 +117,7 @@ GCPlayerController.prototype.initHandlers = function(){
 
 
     // Menu events
-    $("#menu").on("click", ".menuSelector", function(event){
+    $('#menu').on('click', '.menuSelector', function(event){
         var containerId = event.target.dataset.associatedContainer;
         console.log(containerId);
         var container = document.getElementById(containerId);
@@ -135,7 +135,7 @@ GCPlayerController.prototype.initHandlers = function(){
 GCPlayerController.prototype.player = {};
 
 GCPlayerController.prototype.player.playPause = function(){
-    "use strict";
+    'use strict';
     if(jQuery.isEmptyObject(window.GCPlayer.model.playlist.songs)){
         this.play();
     }
@@ -145,7 +145,7 @@ GCPlayerController.prototype.player.playPause = function(){
 };
 
 GCPlayerController.prototype.player.play = function(){
-    "use strict";
+    'use strict';
     // TODO Check if it is interesting to start playing randomly/sequently music
     if(jQuery.isEmptyObject(window.GCPlayer.model.playlist.songs)){
         window.GCPlayer.model.playlist.createRandom(window.GCPlayer.model.library.getSongArray(), true);
@@ -156,19 +156,19 @@ GCPlayerController.prototype.player.play = function(){
 };
 
 GCPlayerController.prototype.player.pause = function(){
-    "use strict";
+    'use strict';
     window.GCPlayer.view.player.pause();
 };
 
 GCPlayerController.prototype.player.playNextSong = function(){
-    "use strict";
+    'use strict';
     if(window.GCPlayer.model.playlist.hasNextSong()){
         window.GCPlayer.model.playlist.playNextSong();
     }
 };
 
 GCPlayerController.prototype.player.playPreviousSong = function(){
-    "use strict";
+    'use strict';
     if(window.GCPlayer.model.playlist.hasPreviousSong()){
         window.GCPlayer.model.playlist.playPreviousSong();
     }
@@ -180,7 +180,7 @@ GCPlayerController.prototype.player.playPreviousSong = function(){
 GCPlayerController.prototype.menu = {};
 
 GCPlayerController.prototype.menu.enableContainer = function(container){
-    "use strict";
+    'use strict';
     window.GCPlayer.view.menu.enableContainer(container);
 };
 
@@ -188,9 +188,9 @@ GCPlayerController.prototype.menu.enableContainer = function(container){
 GCPlayerController.prototype.extensions = {};
 
 GCPlayerController.prototype.extensions.init = function(){
-    "use strict";
+    'use strict';
     var extensionsFilePromise = new Promise(function(resolve, reject){
-        $.getJSON("extensions/extensions.json", function(result){
+        $.getJSON('extensions/extensions.json', function(result){
             // Save extensions to model
             window.GCPlayer.model.extensions.updateModel(result.extensions, function(extensions){
                 resolve(extensions);
@@ -208,23 +208,23 @@ GCPlayerController.prototype.extensions.init = function(){
 };
 
 GCPlayerController.prototype.extensions.loadScript = function(scriptRelPath){
-    "use strict";
+    'use strict';
     var script = document.createElement('script');
     script.type = 'text/javascript';
     script.charset = 'utf-8';
     script.defer = true;
     script.async = true;
     var head = document.getElementsByTagName('head')[0];
-    script.src = "extensions/"+scriptRelPath;
+    script.src = 'extensions/'+scriptRelPath;
     head.appendChild(script);
 };
 
 GCPlayerController.prototype.extensions.loadCss = function(cssRelPath){
-    "use strict";
-    var link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.type = "text/css";
-    link.href = "extensions/"+cssRelPath;
+    'use strict';
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = 'extensions/'+cssRelPath;
     var head = document.getElementsByTagName('head')[0];
     head.appendChild(link);
 };

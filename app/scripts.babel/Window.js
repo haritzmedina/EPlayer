@@ -1,5 +1,5 @@
 (function(){
-    "use strict";
+    'use strict';
     window.GCPlayer = {};
     window.GCPlayer.view = new GCPlayerView();
     window.GCPlayer.model = new GCPlayerModel();
