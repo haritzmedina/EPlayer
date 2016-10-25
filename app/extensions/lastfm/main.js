@@ -99,7 +99,8 @@
         loginYesButton.addEventListener("click", function(){
             window.LastFM.retrieveWebServiceSession(window.GCPlayer.model.extensions.data.lastfm.token, function(session){
                 window.GCPlayer.model.extensions.data.lastfm.sessionId = session;
-                debugger;
+                // TODO Verify that LastFM is connected properly
+                console.log('LastFM connected');
             });
         });
         var loginNoButton = document.getElementById("lastfm-loginNo");
@@ -112,8 +113,21 @@
 
 
     // Song change event
-    document.getElementById("player").addEventListener("currentSongChanged", function(result){
+    GCPlayer.view.player.playerInstance.addEventListener("currentSongChanged", function(result){
         // TODO Ensure that 30 seconds of the song were played before scrobble
+      console.log('Song changed received by lastfm');
+      console.log(GCPlayer.model.currentSong);
+      var song = GCPlayer.model.currentSong;
+      var timestamp = parseInt((result.detail.time / 1000).toFixed(0));
 
+      LastFM.scrobble(
+        song.artist,
+        song.title,
+        timestamp,
+        window.GCPlayer.model.extensions.data.lastfm.sessionId,
+        (result)=>{
+          console.log(result);
+        }
+        );
     });
 })();
