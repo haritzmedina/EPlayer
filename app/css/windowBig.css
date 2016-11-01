@@ -76,7 +76,7 @@ a{
 
 #librarySelector{
     background-color: rgba(200, 49, 107, 1);
-    background-image: url(../img/library.png);
+    background-image: url(../images/library.png);
     background-size: 4.5em 4.5em;
 }
 
@@ -87,7 +87,7 @@ a{
 
 #playlistSelector{
     background-color: rgba(50, 125, 200, 1);
-    background-image: url(../img/playlist.png);
+    background-image: url(../images/playlist.png);
     background-size: 4.5em 4.5em;
 }
 
@@ -97,7 +97,7 @@ a{
 
 #settingsSelector{
     background-color: rgba(160, 160, 40, 1);
-    background-image: url(../img/settings.png);
+    background-image: url(../images/settings.png);
     background-size: 4.5em 4.5em;
 }
 
@@ -107,7 +107,7 @@ a{
 
 #expandSelector{
     background-color: rgba(0, 0, 0, 1);
-    background-image: url(../img/expand.png);
+    background-image: url(../images/expand.png);
     background-size: 4.5em 4.5em;
 }
 
@@ -260,11 +260,11 @@ a{
 }
 
 .librarySongPlayButton{
-    background-image: url(../img/play.png);
+    background-image: url(../images/play.png);
 }
 
 .librarySongAddPlaylist{
-    background-image: url(../img/add_playlist.png);
+    background-image: url(../images/add_playlist.png);
 }
 
 /* Contextual widgets */

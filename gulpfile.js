@@ -1,15 +1,20 @@
 // generated on 2016-05-24 using generator-chrome-extension 0.5.6
-import gulp from 'gulp';
-import gulpLoadPlugins from 'gulp-load-plugins';
-import del from 'del';
-import runSequence from 'run-sequence';
-import {stream as wiredep} from 'wiredep';
+var gulp = require('gulp');
+var gulpLoadPlugins = require('gulp-load-plugins');
+var del = require('del');
+var runSequence = require('run-sequence');
+var source = require('vinyl-source-stream');
+var browserify = require('browserify');
+var uglify = require('gulp-uglify');
+var pump = require('pump');
+var babel  = require("gulp-babel");
+
 
 const $ = gulpLoadPlugins();
 
 gulp.task('extras', () => {
   return gulp.src([
-    'app/*.*',
+    'app/**/*.*',
     'app/_locales/**',
     '!app/scripts.babel',
     '!app/*.json',
@@ -18,6 +23,20 @@ gulp.task('extras', () => {
     base: 'app',
     dot: true
   }).pipe(gulp.dest('dist'));
+});
+
+gulp.task('scripts', (cb)=>{
+  "use strict";
+  pump([
+    gulp.src([
+      'app/scripts/**/*.js',
+      '!app/scripts/chromereload.js'
+    ]),
+      babel({presets: ['es2015'], compact: false}),
+      uglify(),
+      gulp.dest('dist/scripts')
+  ],
+  cb);
 });
 
 function lint(files, options) {
@@ -29,6 +48,7 @@ function lint(files, options) {
 }
 
 gulp.task('lint', lint('app/scripts.babel/**/*.js', {
+  parserOptions: { sourceType : 'module'},
   env: {
     es6: true
   }
@@ -64,7 +84,7 @@ gulp.task('html',  () => {
 gulp.task('chromeManifest', () => {
   return gulp.src('app/manifest.json')
     .pipe($.chromeManifest({
-      buildnumber: true,
+      buildnumber: false,
       background: {
         target: 'scripts/background.js',
         exclude: [
@@ -79,17 +99,18 @@ gulp.task('chromeManifest', () => {
   .pipe(gulp.dest('dist'));
 });
 
-gulp.task('babel', () => {
-  return gulp.src('app/scripts.babel/**/*.js')
-      .pipe($.babel({
-        presets: ['es2015']
-      }))
-      .pipe(gulp.dest('app/scripts'));
+gulp.task('browserify', function() {
+  return browserify('./app/scripts.babel/Window.js')
+    .bundle()
+    //Pass desired output filename to vinyl-source-stream
+    .pipe(source('Window.js'))
+    // Start piping stream to tasks!
+    .pipe(gulp.dest('app/scripts'));
 });
 
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
-gulp.task('watch', ['lint', 'babel', 'html'], () => {
+gulp.task('watch', ['lint', 'browserify', 'html'], () => {
   $.livereload.listen();
 
   gulp.watch([
@@ -100,20 +121,11 @@ gulp.task('watch', ['lint', 'babel', 'html'], () => {
     'app/_locales/**/*.json'
   ]).on('change', $.livereload.reload);
 
-  gulp.watch('app/scripts.babel/**/*.js', ['lint', 'babel']);
-  gulp.watch('bower.json', ['wiredep']);
+  gulp.watch('app/scripts.babel/**/*.js', ['lint', 'browserify']);
 });
 
 gulp.task('size', () => {
   return gulp.src('dist/**/*').pipe($.size({title: 'build', gzip: true}));
-});
-
-gulp.task('wiredep', () => {
-  gulp.src('app/*.html')
-    .pipe(wiredep({
-      ignorePath: /^(\.\.\/)*\.\./
-    }))
-    .pipe(gulp.dest('app'));
 });
 
 gulp.task('package', function () {
@@ -125,8 +137,8 @@ gulp.task('package', function () {
 
 gulp.task('build', (cb) => {
   runSequence(
-    'lint', 'babel', 'chromeManifest',
-    ['html', 'images', 'extras'],
+    'lint', 'chromeManifest',
+    ['html', 'images', 'extras', 'scripts'],
     'size', cb);
 });
 
