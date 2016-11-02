@@ -1,10 +1,14 @@
 class ExtensionsRunner{
 
+  constructor(){
+
+  }
+
   populateRunner(extensionsMetadata){
 
   }
 
-  initExtensions(){
+  init(){
 
   }
 
@@ -13,3 +17,5 @@ class ExtensionsRunner{
   }
 
 }
+
+module.exports = ExtensionsRunner;

@@ -8,6 +8,7 @@ var browserify = require('browserify');
 var uglify = require('gulp-uglify');
 var pump = require('pump');
 var babel  = require("gulp-babel");
+var jsdoc = require('gulp-jsdoc3');
 
 
 const $ = gulpLoadPlugins();
@@ -16,7 +17,12 @@ gulp.task('extras', () => {
   return gulp.src([
     'app/**/*.*',
     'app/_locales/**',
+    '!app/scripts',
+    '!app/scripts/**/*',
     '!app/scripts.babel',
+    '!app/scripts.babel/**/*',
+    '!app/images',
+    '!app/images/**/*',
     '!app/*.json',
     '!app/*.html',
   ], {
@@ -24,6 +30,13 @@ gulp.task('extras', () => {
     dot: true
   }).pipe(gulp.dest('dist'));
 });
+
+gulp.task('doc', function (cb) {
+  var config = require('./jsdoc.json');
+  gulp.src(['README.md', './app/scripts.babel/**/*.js'], {read: false})
+    .pipe(jsdoc(config, cb));
+});
+
 
 gulp.task('scripts', (cb)=>{
   "use strict";
