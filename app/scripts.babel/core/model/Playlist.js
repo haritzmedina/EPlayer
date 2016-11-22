@@ -1,6 +1,17 @@
 'use strict';
 
+
+
+/**
+ *
+ */
 class Playlist{
+
+  constructor(){
+    this.songs = [];
+  }
+
+
 
 }
 

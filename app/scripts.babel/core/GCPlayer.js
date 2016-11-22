@@ -1,9 +1,14 @@
 'use strict';
 
 var ExtensionsRunner = require('../extensions/ExtensionsRunner');
+var ChromeStorage = require('../io/ChromeStorage');
+var LibraryContainer = require('./LibraryContainer');
+var Logger = require('../io/Logger');
+
+var LocalLibrary = require('./model/LocalLibrary');
 
 /**
- * The main file
+ * The main file of GCPlayer
  * @author Haritz Medina <me@haritzmedina.com>
  */
 class GCPlayer{
@@ -12,6 +17,7 @@ class GCPlayer{
    */
   constructor(){
     this.extensionsRunner = new ExtensionsRunner();
+    this.libraryContainer = new LibraryContainer();
     this.init();
   }
 
@@ -27,6 +33,33 @@ class GCPlayer{
   }
 
   loadCoreComponents(){
+    // Load libraries
+    this.libraryContainer.init(()=>{
+      // Add library
+      this.libraryContainer.loadLibraries(()=>{
+        this.libraryContainer.localLibraries[0].songs[0].src.retrievePlayableSource((dataURL)=>{
+          let player = document.getElementById('player');
+          player.src = dataURL;
+          player.play();
+        });
+        // If libraries are empty, ask for one
+        if(!this.libraryContainer.areLibrariesDefined()){
+          this.libraryContainer.promptNewLocalLibraryForm(()=>{
+
+          });
+        }
+      });
+    });
+
+    // Load playlists
+
+    // Load player
+
+    // Load interface
+
+  }
+
+  loadLibraries(){
 
   }
 }

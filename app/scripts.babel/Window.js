@@ -1,17 +1,18 @@
 (function(){
-  var GCPlayer = require('./core/GCPlayer');
+  var GoogleChromePlayer = require('./core/GCPlayer');
   var GCPlayerView = require('./View');
   var GCPlayerModel = require('./Model');
   var GCPlayerController = require('./Controller');
 
     'use strict';
-    window.GCPlayer = new GCPlayer();
+    /*window.GCPlayer = {};
     window.GCPlayer.view = new GCPlayerView();
     window.GCPlayer.model = new GCPlayerModel();
-    window.GCPlayer.controller = new GCPlayerController();
+    window.GCPlayer.controller = new GCPlayerController();*/
 
     window.onload = function(){
-        window.GCPlayer.controller.init();
+      //window.GCPlayer.controller.init();
+      new GoogleChromePlayer();
     };
 })();
 

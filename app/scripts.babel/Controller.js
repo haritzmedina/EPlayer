@@ -20,7 +20,7 @@ GCPlayerController.prototype.init = function () {
   window.GCPlayer.controller.extensions.init();
 };
 
-GCPlayerController.prototype.addMusicDirectory = function () {
+/*GCPlayerController.prototype.addMusicDirectory = function () {
   'use strict';
 
   chrome.fileSystem.chooseEntry({ type: 'openDirectory' }, function (dirEntry) {
@@ -32,7 +32,7 @@ GCPlayerController.prototype.addMusicDirectory = function () {
     });
     window.GCPlayer.model.library.loadFolder(folderPointer);
   });
-};
+};*/
 
 GCPlayerController.prototype.play = function (song) {
   'use strict';
