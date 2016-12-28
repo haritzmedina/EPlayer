@@ -1,5 +1,7 @@
 'use strict';
 
+var Playlist = require('./model/Playlist');
+
 /**
  * A container for the playlist defined by user
  * @author Haritz Medina <me@haritzmedina.com>
@@ -11,9 +13,10 @@ class PlaylistContainer {
    */
   constructor(){
     this.playlists = [];
+    this.currentPlaylist = new Playlist([]);
   }
 
-  static addPlaylist(playlist){
+  addPlaylist(playlist){
     if(typeof playlist!=='Playlist'){
       return null;
     }
@@ -22,12 +25,22 @@ class PlaylistContainer {
     }
   }
 
+  changeCurrentPlaylist(playlist, isPlayable){
+    this.currentPlaylist = playlist;
+    if(isPlayable){
+      window.GCPlayer.player.setPlaylist(this.currentPlaylist);
+      window.GCPlayer.player.play();
+    }
+  }
+
   /**
-   * Retrieve from chrome storage saved playlists
+   * Load saved playlists from chrome storage
    */
-  static populatePlaylist(){
+  init(){
     // TODO Retrieve playlists from chrome storage
   }
+
+
 
 }
 

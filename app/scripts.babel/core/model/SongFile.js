@@ -1,15 +1,14 @@
 'use strict';
 
-var Song = require('./Song');
-var LanguageUtils = require('../../utils/LanguageUtils');
-var id3 = require('id3js');
-
-var SongFileSource = require('./SongFileSource');
+const Song = require('./Song');
+const LanguageUtils = require('../../utils/LanguageUtils');
+const id3 = require('id3js');
+const SongFileSource = require('./SongFileSource');
 
 class SongFile extends Song{
 
-  constructor(fileEntry, metadata){
-    super(metadata.artist, metadata.title, metadata.album, new SongFileSource(fileEntry));
+  constructor(id, fileEntry, metadata){
+    super(id, metadata.artist, metadata.title, metadata.album, new SongFileSource(fileEntry));
   }
 
   static readSongFileMetadata(fileEntry, callback){
@@ -17,7 +16,7 @@ class SongFile extends Song{
     fileEntry.file((file)=>{
       try {
         id3(file, function (err, tags) {
-          var metadata = {};
+          let metadata = {};
           if (tags.artist !== null) {
             metadata.artist = tags.artist;
           }

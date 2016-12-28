@@ -1,12 +1,14 @@
 'use strict';
 
-var jquery = require('jquery');
-var uuid = require('uuid');
+const jquery = require('jquery');
+const uuid = require('uuid');
+const Playlist = require('./Playlist');
+const Logger = require('./../../io/Logger');
 
 
 class Song{
-  constructor(title, artist, album, src){
-    this.id = uuid();
+  constructor(id, title, artist, album, src){
+    this.id = id;
     this.title = title;
     this.artist = artist;
     this.album = album;
@@ -15,24 +17,32 @@ class Song{
 
   printLibrarySong(libraryId, container){
     // Display song using librarySongElement template
-    var template = document.querySelector('#librarySongElement');
-    var content = document.importNode(template.content, true);
+    let template = document.querySelector('#librarySongElement');
+    let content = document.importNode(template.content, true);
 
-    var songDiv = content.querySelector('.librarySongElement');
+    let songDiv = content.querySelector('.librarySongElement');
     songDiv.dataset.libraryId = libraryId;
     songDiv.dataset.songId = this.id;
-    //songDiv.dataset.songId = song.folder + '#' + song.filename;
-    var artistDiv = content.querySelector('.librarySongElementArtist');
+    let artistDiv = content.querySelector('.librarySongElementArtist');
     artistDiv.innerText = this.artist;
-    var albumDiv = content.querySelector('.librarySongElementAlbum');
+    let albumDiv = content.querySelector('.librarySongElementAlbum');
     albumDiv.innerText = this.album;
-    var titleDiv = content.querySelector('.librarySongElementTitle');
+    let titleDiv = content.querySelector('.librarySongElementTitle');
     titleDiv.innerText = this.title;
+    let playButton = content.querySelector('.librarySongPlayButton');
+    playButton.addEventListener('click', (event)=>{
+      window.GCPlayer.playlistContainer.changeCurrentPlaylist(new Playlist('temp', [this]), true);
+    });
+    let addPlaylistButton = content.querySelector('.librarySongAddPlaylist');
+    addPlaylistButton.addEventListener('click', (event)=>{
+      window.GCPlayer.playlistContainer.currentPlaylist.addSong(this);
+
+    });
     container.appendChild(content);
   }
 
-  retrievePlaySource(callback){
-    this.src
+  retrievePlayableSource(callback){
+    this.src.retrievePlayableSource(callback);
   }
 }
 

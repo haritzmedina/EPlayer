@@ -1,11 +1,13 @@
 'use strict';
 
-var ExtensionsRunner = require('../extensions/ExtensionsRunner');
-var ChromeStorage = require('../io/ChromeStorage');
-var LibraryContainer = require('./LibraryContainer');
-var Logger = require('../io/Logger');
+const ExtensionsRunner = require('../extensions/ExtensionsRunner');
+const ChromeStorage = require('../io/ChromeStorage');
+const LibraryContainer = require('./LibraryContainer');
+const Player = require('./Player');
+const PlaylistContainer = require('./PlaylistContainer');
+const Logger = require('../io/Logger');
 
-var LocalLibrary = require('./model/LocalLibrary');
+const LocalLibrary = require('./model/LocalLibrary');
 
 /**
  * The main file of GCPlayer
@@ -18,6 +20,8 @@ class GCPlayer{
   constructor(){
     this.extensionsRunner = new ExtensionsRunner();
     this.libraryContainer = new LibraryContainer();
+    this.playlistContainer = new PlaylistContainer();
+    this.player = new Player();
     this.init();
   }
 
@@ -25,6 +29,9 @@ class GCPlayer{
    * Initialization of GCPlayer components
    */
   init(){
+    // Add global reference to GCPlayer
+    window.GCPlayer = this;
+
     // Load core components
     this.loadCoreComponents();
 
@@ -37,31 +44,38 @@ class GCPlayer{
     this.libraryContainer.init(()=>{
       // Add library
       this.libraryContainer.loadLibraries(()=>{
-        this.libraryContainer.localLibraries[0].songs[0].src.retrievePlayableSource((dataURL)=>{
-          let player = document.getElementById('player');
-          player.src = dataURL;
-          player.play();
-        });
         // If libraries are empty, ask for one
         if(!this.libraryContainer.areLibrariesDefined()){
           this.libraryContainer.promptNewLocalLibraryForm(()=>{
 
           });
         }
+        /*else{
+          let playlistExample = new Playlist('Example', this.libraryContainer.retrieveAllSongs());
+          playlistExample.start();
+          playlistExample.currentSong.src.retrievePlayableSource((source) => {
+            let player = document.querySelector('#player');
+            player.src = source;
+            //player.play();
+          });
+        }*/
       });
     });
 
     // Load playlists
 
     // Load player
+    this.player.initPanelHandlers();
+
 
     // Load interface
 
+    // Testing
+
+    //this.libraryContainer.removeLocalLibrary({id: 'c7b53f1c-cc97-4a28-8e87-88c0f1d97de7'});
+
   }
 
-  loadLibraries(){
-
-  }
 }
 
 module.exports = GCPlayer;

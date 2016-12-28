@@ -1,89 +1,94 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script type="text/javascript" src="scripts/Window.js"></script>
-    <link rel="stylesheet" media="screen and (min-width: 800px)" href="css/windowBig.css"/>
-    <link rel="stylesheet" media="screen and (max-width: 799px)" href="css/windowSmall.css"/>
-    <title>Google Chrome Player</title>
+  <script type="text/javascript" src="scripts/Window.js"></script>
+  <link rel="stylesheet" media="screen and (min-width: 800px)" href="css/windowBig.css"/>
+  <link rel="stylesheet" media="screen and (max-width: 799px)" href="css/windowSmall.css"/>
+  <title>Google Chrome Player</title>
 </head>
 <body>
-    <div id="menu">
+<div id="menu">
         <span id="librarySelector" class="menuElement menuSelector" data-associated-container="libraryContainer" title="Library">
         </span>
-        <span id="playlistSelector" class="menuElement menuSelector" data-associated-container="playlistContainer" title="Playlists">
+  <span id="playlistSelector" class="menuElement menuSelector" data-associated-container="playlistContainer" title="Playlists">
         </span>
-        <span id="settingsSelector" class="menuElement menuSelector" data-associated-container="settingsContainer" title="Settings">
+  <span id="settingsSelector" class="menuElement menuSelector" data-associated-container="settingsContainer" title="Settings">
         </span>
-        <!-- TODO resolve
-        <span id="expandSelector" class="menuElement" title="Expand menu">
-        </span>
-        -->
-    </div>
+  <!-- TODO resolve
+  <span id="expandSelector" class="menuElement" title="Expand menu">
+  </span>
+  -->
+</div>
 
-    <div id="content">
-    <div id="libraryContainer" class="contentContainer">
-            <div id="librarySearchWrapper">
-                <input id="librarySearch" type="search" placeholder="Search for song"/>
-            </div>
-            <div id="librarySearchResults">
-                <!-- Here will be added song results -->
-            </div>
-            <template id="librarySongElement">
-                <div class="librarySongElement">
-                    <span class="librarySongControl librarySongPlayButton" title="Play"></span>
-                    <span class="librarySongControl librarySongAddPlaylist" title="Add playlist"></span>
-                    <span class="librarySongText librarySongElementArtist"></span>
-                    <span class="librarySongText librarySongElementTitle"></span>
-                    <span class="librarySongText librarySongElementAlbum"></span>
-                </div>
-            </template>
-        </div>
-        <div id="playlistContainer" class="contentContainer" data-enabled="false">
-            <div id="playlistSearchWrapper">
-                <input id="playlistSearch" type="search" placeholder="Search for song"/>
-            </div>
-            <div id="playlistSearchResults">
-                <!-- Here will be added song results -->
-            </div>
-        </div>
-        <div id="settingsContainer" class="contentContainer" data-enabled="false">
-            <div id="settingsLibrary">
-                <span id="settingsLibraryAddFolder" title="Add songs folder to library"></span>
-                <div id="settingsLibraryCurrentFolders">
-
-                </div>
-            </div>
-            <div id="extensions">
-                <template id="extension">
-                    <div class="extension">
-                        <span class="extensionName"></span>
-                        <span class="extensionDescription"></span>
-                        <span class="extensionVersion"></span>
-                        <span class="extensionAuthor"></span>
-                        <input type="checkbox" class="extensionEnabled"/>
-                    </div>
-                </template>
-            </div>
-        </div>
-        <div id="songInfoContainer" class="contentContainer" data-enabled="false">
-
-        </div>
+<div id="content">
+  <div id="libraryContainer" class="contentContainer">
+    <div id="librarySearchWrapper">
+      <input id="librarySearch" type="search" placeholder="Search for song"/>
     </div>
-    <div id="playerWrapper">
-        <a class="playerControl" id="previous"><img src="/images/previous.png" title="previous"></a>
-        <a class="playerControl" id="play" data-enabled="true"><img src="/images/play.png" title="play"></a>
-        <a class="playerControl" id="pause" data-enabled="false"><img src="/images/pause.png" title="pause"></a>
-        <a class="playerControl" id="next"><img src="/images/next.png" title="next"></a>
-        <a class="playerControl" id="repeat" data-activated="false"><img src="/images/repeat.png" title="repeat"></a>
-        <a class="playerControl" id="shuffle" data-activated="true"><img src="/images/shuffle.png" title="shuffle"></a>
-        <span id="playerTimeValue">--:--</span>/<span id="playerTimeMax">--:--</span>
-        <progress id="playerProgressBar"></progress>
-        <span id="playingSongInfo">
-            <span id="album"></span>
-            <span id="artist"></span>
-            <span id="title"></span>
-        </span>
+    <div id="librarySearchResults">
+      <!-- Here will be added song results -->
     </div>
-    <audio id="player" controls="controls"></audio>
+    <template id="librarySongElement">
+      <div class="librarySongElement">
+        <span class="librarySongControl librarySongPlayButton" title="Play"></span>
+        <span class="librarySongControl librarySongAddPlaylist" title="Add playlist"></span>
+        <span class="librarySongText librarySongElementArtist"></span>
+        <span class="librarySongText librarySongElementTitle"></span>
+        <span class="librarySongText librarySongElementAlbum"></span>
+      </div>
+    </template>
+    <template id="library">
+      <div class="libraryTitleWrapper"></div>
+      <div class="librarySongContainer"></div>
+    </template>
+  </div>
+  <div id="playlistContainer" class="contentContainer" data-enabled="false">
+    <div id="playlistSearchWrapper">
+      <input id="playlistSearch" type="search" placeholder="Search for song"/>
+    </div>
+    <div id="playlistSearchResults">
+      <!-- Here will be added song results -->
+    </div>
+  </div>
+  <div id="settingsContainer" class="contentContainer" data-enabled="false">
+    <div id="settingsLibrary">
+      <span id="settingsLibraryAddFolder" title="Add songs folder to library"></span>
+      <div id="settingsLibraryCurrentFolders">
+
+      </div>
+    </div>
+    <div id="extensions">
+      <template id="extension">
+        <div class="extension">
+          <span class="extensionName"></span>
+          <span class="extensionDescription"></span>
+          <span class="extensionVersion"></span>
+          <span class="extensionAuthor"></span>
+          <input type="checkbox" class="extensionEnabled"/>
+        </div>
+      </template>
+    </div>
+  </div>
+  <div id="songInfoContainer" class="contentContainer" data-enabled="false">
+
+  </div>
+</div>
+<div id="playerWrapper">
+  <a class="playerControl" id="previous"><img src="/images/previous.png" title="previous"></a>
+  <a class="playerControl" id="play" data-enabled="true"><img src="/images/play.png" title="play"></a>
+  <a class="playerControl" id="pause" data-enabled="false"><img src="/images/pause.png" title="pause"></a>
+  <a class="playerControl" id="next"><img src="/images/next.png" title="next"></a>
+  <a class="playerControl" id="repeat" data-activated="false"><img src="/images/repeat.png" title="repeat"></a>
+  <a class="playerControl" id="random" data-activated="false"><img src="/images/shuffle.png" title="random"></a>
+  <span id="playerTimeValue">--:--</span>/<span id="playerTimeMax">--:--</span>
+  <progress id="playerProgressBar"></progress>
+  <span id="playingSongInfo">
+    <span id="album"></span>
+    <span id="artist"></span>
+    <span id="title"></span>
+    <span id="cover"></span>
+  </span>
+</div>
+<audio id="player" controls="controls"></audio>
 </body>
 </html>

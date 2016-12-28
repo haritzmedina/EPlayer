@@ -17,7 +17,7 @@ class SongFileSource extends SongSource{
 
   retrievePlayableSource(callback){
     this.fileEntry.file(function (file) {
-      var reader = new FileReader();
+      let reader = new FileReader();
       reader.onload = function () {
         if(LanguageUtils.isFunction(callback)){
           callback(reader.result);

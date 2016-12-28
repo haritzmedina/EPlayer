@@ -1,8 +1,8 @@
 'use strict';
 
-var uuid = require('uuid');
-var Logger = require('../../io/Logger');
-var LanguageUtils = require('../../utils/LanguageUtils');
+const uuid = require('uuid');
+const Logger = require('../../io/Logger');
+const LanguageUtils = require('../../utils/LanguageUtils');
 
 /**
  * Library interface. A library is a song list source.
@@ -10,10 +10,11 @@ var LanguageUtils = require('../../utils/LanguageUtils');
  */
 class Library{
 
-  constructor(source){
+  constructor(source, name){
     this.source = source;
     this.songs = [];
     this.id = uuid();
+    this.name = name;
   }
 
   /**
@@ -21,8 +22,7 @@ class Library{
    * @returns {Array} Song list array
    */
   retrieveSongs(){
-    let songs = [];
-    return songs;
+    return this.songs;
   }
 
   loadLibrary(callback){
@@ -39,10 +39,21 @@ class Library{
   }
 
   printLibrary(callback){
-    Logger.log('Printing library');
+    // Retrieve container to print elements
+    let container = document.getElementById('librarySearchResults');
+
+    // Add header of library
+    let template = document.querySelector('#library');
+    let libraryWrapper = document.importNode(template.content, true);
+    let titleWrapper = libraryWrapper.querySelector('.libraryTitleWrapper');
+    titleWrapper.innerText = this.name;
+    let librarySongContainer = libraryWrapper.querySelector('.librarySongContainer');
+    container.appendChild(libraryWrapper);
+
+    // Print songs of library
     for(let i=0;i<this.songs.length;i++){
       let song = this.songs[i];
-      song.printLibrarySong(this.id, document.getElementById('librarySearchResults'));
+      song.printLibrarySong(this.id, librarySongContainer);
     }
     if(LanguageUtils.isFunction(callback)){
       callback();

@@ -5,8 +5,29 @@
  */
 class DataUtils{
 
-  static shuffle(array){
+  static shuffle(originalArray){
+    var array = originalArray.slice();
+    var currentIndex = array.length, temporaryValue, randomIndex;
 
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+
+  }
+
+  static getRandomElement(array){
+    return array[Math.floor(Math.random() * array.length)];
   }
 
   static removeByExample(array, props){
@@ -18,6 +39,10 @@ class DataUtils{
 
   static queryByExample(array, props){
     return DataUtils.filterArray(array, props);
+  }
+
+  static queryIndexByExample(array, props){
+    return DataUtils.filterArray(array, props, {index: true})[0].index;
   }
 
   static filterArray(array, props, opts){

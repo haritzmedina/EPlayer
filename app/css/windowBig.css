@@ -166,19 +166,19 @@ a{
     height: 1.5em;
 }
 
-#play[data-enabled=true]{
+#play[data-activated=true]{
     display: inline;
 }
 
-#play[data-enabled=false]{
+#play[data-activated=false]{
     display: none;
 }
 
-#pause[data-enabled=true]{
+#pause[data-activated=true]{
     display: inline;
 }
 
-#pause[data-enabled=false]{
+#pause[data-activated=false]{
     display: none;
 }
 
@@ -193,6 +193,11 @@ a{
     height: 100%;
     padding-top: 0.5em;
     padding-bottom: 0.5em;
+}
+
+.libraryTitleWrapper{
+  border-bottom: solid white 1px;
+  font-size: 2em;
 }
 
 #librarySearchWrapper{

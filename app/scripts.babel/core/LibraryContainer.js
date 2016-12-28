@@ -9,7 +9,7 @@ var DataUtils = require('../utils/DataUtils');
 var Library = require('./model/Library');
 
 /**
- * Library interface. A library is a song list source.
+ * Library container. A container and manager for libraries defined by the user.
  * @author Haritz Medina <me@haritzmedina.com>
  */
 class LibraryContainer{
@@ -24,7 +24,7 @@ class LibraryContainer{
    */
   init(callback) {
     // Prepare async promises
-    var promises = [];
+    let promises = [];
     // Load local saved libraries data from chrome storage
     promises.push(new Promise((resolve, reject) => {
       ChromeStorage.getData(ChromeStorageNamespaces.library.container, ChromeStorage.local, (error, result)=> {
@@ -77,7 +77,7 @@ class LibraryContainer{
       }));
     }
     Promise.all(promises).then(()=>{
-      callback();
+      this.updateChromeStorage(callback);
     });
   }
 
@@ -107,6 +107,7 @@ class LibraryContainer{
   }
 
   removeLocalLibrary(library, callback){
+    debugger;
     DataUtils.removeByExample(this.localLibraries, library);
     this.updateChromeStorage(()=>{
       if(LanguageUtils.isFunction(callback)){
@@ -119,10 +120,10 @@ class LibraryContainer{
     chrome.fileSystem.chooseEntry({ type: 'openDirectory' }, (dirEntry)=>{
       // Save new folder reference on model
       if(dirEntry){
-        var folderPointer = chrome.fileSystem.retainEntry(dirEntry);
+        let folderPointer = chrome.fileSystem.retainEntry(dirEntry);
         // TODO retrieve and save localpath and entrypoint
         chrome.fileSystem.getDisplayPath(dirEntry, (absolutePath) => {
-          var localLibrary = new LocalLibrary(folderPointer, absolutePath);
+          let localLibrary = new LocalLibrary(folderPointer, absolutePath);
           this.addLocalLibrary(localLibrary, ()=>{
             if(LanguageUtils.isFunction(callback)){
               callback();
@@ -140,6 +141,14 @@ class LibraryContainer{
 
   areLibrariesDefined(){
     return this.localLibraries.length+this.syncLibraries.length>0;
+  }
+
+  retrieveAllSongs(){
+    let songs = [];
+    for(let i=0;i<this.localLibraries.length;i++){
+      songs = songs.concat(this.localLibraries[i].retrieveSongs());
+    }
+    return songs;
   }
 
 }
