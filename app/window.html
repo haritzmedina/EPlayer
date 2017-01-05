@@ -8,12 +8,9 @@
 </head>
 <body>
 <div id="menu">
-        <span id="librarySelector" class="menuElement menuSelector" data-associated-container="libraryContainer" title="Library">
-        </span>
-  <span id="playlistSelector" class="menuElement menuSelector" data-associated-container="playlistContainer" title="Playlists">
-        </span>
-  <span id="settingsSelector" class="menuElement menuSelector" data-associated-container="settingsContainer" title="Settings">
-        </span>
+  <span id="librarySelector" class="menuElement menuSelector" data-associated-container="libraryContainer" title="Library"></span>
+  <span id="playlistSelector" class="menuElement menuSelector" data-associated-container="playlistContainer" title="Playlists"></span>
+  <span id="settingsSelector" class="menuElement menuSelector" data-associated-container="settingsContainer" title="Settings"></span>
   <!-- TODO resolve
   <span id="expandSelector" class="menuElement" title="Expand menu">
   </span>
@@ -24,6 +21,9 @@
   <div id="libraryContainer" class="contentContainer">
     <div id="librarySearchWrapper">
       <input id="librarySearch" type="search" placeholder="Search for song"/>
+    </div>
+    <div id="libraryControlsWrapper">
+      <span id="addLibraryButton" class="libraryControl"></span>
     </div>
     <div id="librarySearchResults">
       <!-- Here will be added song results -->
@@ -38,7 +38,13 @@
       </div>
     </template>
     <template id="library">
-      <div class="libraryTitleWrapper"></div>
+      <div class="libraryTopWrapper">
+        <div class="libraryTitleWrapper"></div>
+        <div class="libraryOptions">
+          <div class="libraryPlay"></div>
+          <div class="libraryRemove"></div>
+        </div>
+      </div>
       <div class="librarySongContainer"></div>
     </template>
   </div>
@@ -64,7 +70,9 @@
           <span class="extensionDescription"></span>
           <span class="extensionVersion"></span>
           <span class="extensionAuthor"></span>
-          <input type="checkbox" class="extensionEnabled"/>
+          <label>
+            <input type="checkbox" class="extensionEnabled"/>
+          </label>
         </div>
       </template>
     </div>
@@ -74,12 +82,12 @@
   </div>
 </div>
 <div id="playerWrapper">
-  <a class="playerControl" id="previous"><img src="/images/previous.png" title="previous"></a>
-  <a class="playerControl" id="play" data-enabled="true"><img src="/images/play.png" title="play"></a>
-  <a class="playerControl" id="pause" data-enabled="false"><img src="/images/pause.png" title="pause"></a>
-  <a class="playerControl" id="next"><img src="/images/next.png" title="next"></a>
-  <a class="playerControl" id="repeat" data-activated="false"><img src="/images/repeat.png" title="repeat"></a>
-  <a class="playerControl" id="random" data-activated="false"><img src="/images/shuffle.png" title="random"></a>
+  <a class="playerControl" id="previous"><img src="./images/previous.png" title="previous"></a>
+  <a class="playerControl" id="play" data-activated="true"><img src="./images/play.png" title="play"></a>
+  <a class="playerControl" id="pause" data-activated="false"><img src="./images/pause.png" title="pause"></a>
+  <a class="playerControl" id="next"><img src="./images/next.png" title="next"></a>
+  <a class="playerControl" id="repeat" data-status="false"><img src="./images/repeat.png" title="repeat"></a>
+  <a class="playerControl" id="random" data-status="false"><img src="./images/shuffle.png" title="random"></a>
   <span id="playerTimeValue">--:--</span>/<span id="playerTimeMax">--:--</span>
   <progress id="playerProgressBar"></progress>
   <span id="playingSongInfo">

@@ -24,7 +24,8 @@
   "permissions": [
     {"fileSystem": ["retainEntries", "directory"]},
     "unlimitedStorage",
-    "storage"
+    "storage",
+    "notifications"
   ],
 
   "commands": {

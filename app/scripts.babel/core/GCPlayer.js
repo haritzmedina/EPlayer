@@ -4,6 +4,7 @@ const ExtensionsRunner = require('../extensions/ExtensionsRunner');
 const ChromeStorage = require('../io/ChromeStorage');
 const LibraryContainer = require('./LibraryContainer');
 const Player = require('./Player');
+const Menu = require('./Menu');
 const PlaylistContainer = require('./PlaylistContainer');
 const Logger = require('../io/Logger');
 
@@ -22,6 +23,7 @@ class GCPlayer{
     this.libraryContainer = new LibraryContainer();
     this.playlistContainer = new PlaylistContainer();
     this.player = new Player();
+    this.menu = new Menu();
     this.init();
   }
 
@@ -37,6 +39,9 @@ class GCPlayer{
 
     // Load extensions
     this.extensionsRunner.init();
+
+    // Load on close events
+    this.loadCloseEvents();
   }
 
   loadCoreComponents(){
@@ -50,15 +55,6 @@ class GCPlayer{
 
           });
         }
-        /*else{
-          let playlistExample = new Playlist('Example', this.libraryContainer.retrieveAllSongs());
-          playlistExample.start();
-          playlistExample.currentSong.src.retrievePlayableSource((source) => {
-            let player = document.querySelector('#player');
-            player.src = source;
-            //player.play();
-          });
-        }*/
       });
     });
 
@@ -69,13 +65,19 @@ class GCPlayer{
 
 
     // Load interface
+    this.menu.init();
 
     // Testing
 
-    //this.libraryContainer.removeLocalLibrary({id: 'c7b53f1c-cc97-4a28-8e87-88c0f1d97de7'});
-
   }
 
+  loadCloseEvents() {
+    chrome.runtime.onSuspend.addListener(()=>{
+      // Update library container chrome storage
+      this.libraryContainer.updateChromeStorage();
+    });
+
+  }
 }
 
 module.exports = GCPlayer;

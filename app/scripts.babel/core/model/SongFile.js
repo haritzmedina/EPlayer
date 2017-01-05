@@ -8,7 +8,7 @@ const SongFileSource = require('./SongFileSource');
 class SongFile extends Song{
 
   constructor(id, fileEntry, metadata){
-    super(id, metadata.artist, metadata.title, metadata.album, new SongFileSource(fileEntry));
+    super(id, metadata.title, metadata.artist, metadata.album, new SongFileSource(fileEntry));
   }
 
   static readSongFileMetadata(fileEntry, callback){
@@ -35,7 +35,6 @@ class SongFile extends Song{
       }
     });
   }
-
 }
 
 module.exports = SongFile;

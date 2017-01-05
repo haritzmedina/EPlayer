@@ -195,24 +195,69 @@ a{
     padding-bottom: 0.5em;
 }
 
-.libraryTitleWrapper{
-  border-bottom: solid white 1px;
-  font-size: 2em;
-}
-
 #librarySearchWrapper{
-    height: 5em;
+  height: 5em;
+  float:left;
 }
 
 #librarySearch{
-    font-size: 3em;
-    text-align: center;
+  font-size: 3em;
+  text-align: center;
+}
+
+#libraryControlsWrapper{
+  float: left;
+  right: 20px;
+  position:absolute;
+}
+
+.libraryControl{
+  background-color: rgba(200,200,200,0.8);
+  background-size: 4.5em 4.5em;
+  background-image: url('/images/addMusic.png');
+  float: left;
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
 }
 
 #librarySearchResults{
-    overflow-y: auto;
-    width: 100%;
-    height: calc(100% - 5em);
+  overflow-y: auto;
+  width: 100%;
+  height: calc(100% - 5em);
+}
+
+.libraryTopWrapper{
+  height:40px;
+  border-bottom: solid white 1px;
+}
+
+.libraryTitleWrapper{
+  font-size: 2em;
+  float:left;
+}
+
+.libraryOptions{
+  margin-left: 100px;
+  right: 20px;
+  height: 40px;
+  position:absolute;
+}
+
+.libraryRemove{
+  background-image: url('/images/remove.png');
+  float: left;
+  background-size: cover;
+  width: 30px;
+  height: 30px;
+}
+
+.libraryPlay{
+  background-image: url('/images/play.png');
+  float: left;
+  background-size: cover;
+  width: 30px;
+  height: 30px;
 }
 
 .librarySongElement{

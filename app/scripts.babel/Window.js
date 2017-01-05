@@ -1,5 +1,5 @@
 (function(){
-  var GoogleChromePlayer = require('./core/GCPlayer');
+  let GoogleChromePlayer = require('./core/GCPlayer');
   var GCPlayerView = require('./View');
   var GCPlayerModel = require('./Model');
   var GCPlayerController = require('./Controller');

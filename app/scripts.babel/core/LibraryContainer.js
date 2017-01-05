@@ -1,12 +1,12 @@
 'use strict';
 
-var ChromeStorage = require('../io/ChromeStorage');
-var ChromeStorageNamespaces = require('../io/ChromeStorageNamespaces');
-var LanguageUtils = require('../utils/LanguageUtils');
-var Logger = require('../io/Logger');
-var LocalLibrary = require('./model/LocalLibrary');
-var DataUtils = require('../utils/DataUtils');
-var Library = require('./model/Library');
+const ChromeStorage = require('../io/ChromeStorage');
+const ChromeStorageNamespaces = require('../io/ChromeStorageNamespaces');
+const LanguageUtils = require('../utils/LanguageUtils');
+const Logger = require('../io/Logger');
+const LocalLibrary = require('./model/LocalLibrary');
+const DataUtils = require('../utils/DataUtils');
+const Library = require('./model/Library');
 
 /**
  * Library container. A container and manager for libraries defined by the user.
@@ -49,7 +49,7 @@ class LibraryContainer{
         this.syncLibraries = [];
         if (!LanguageUtils.isEmptyObject(result)) {
           for(let i=0;i<result.length;i++){
-            // TODO Depending on Library is needed to create an object instead of "new Library()"
+            // TODO Depending on Library is needed to create an object instead of 'new Library()'
             this.syncLibraries.push(LanguageUtils.fillObject(new Library(), result[i]));
           }
         }
@@ -67,6 +67,10 @@ class LibraryContainer{
    * Initialize libraries in the library container
    */
   loadLibraries(callback){
+    // Clean libraries wrapper
+    let container = document.getElementById('librarySearchResults');
+    container.innerText = '';
+
     let promises = [];
     for(let i=0;i<this.localLibraries.length;i++){
       promises.push(new Promise((resolve, reject)=>{
@@ -90,8 +94,10 @@ class LibraryContainer{
     // Check if library is already added
     if(DataUtils.queryByExample(this.localLibraries, {absolutePath: library.absolutePath}).length===0){
       this.localLibraries.push(library);
-      // Update local library
-      this.updateChromeStorage(callback);
+      library.loadLibrary(()=>{
+        // Update local library
+        this.updateChromeStorage(callback);
+      });
     }
     else{
       Logger.log('Already Added');
@@ -106,13 +112,18 @@ class LibraryContainer{
     });
   }
 
-  removeLocalLibrary(library, callback){
-    debugger;
+  removeLibrary(library, callback){
+    // Remove library from local or sync (depending on where it is
     DataUtils.removeByExample(this.localLibraries, library);
-    this.updateChromeStorage(()=>{
-      if(LanguageUtils.isFunction(callback)){
-        callback();
-      }
+    DataUtils.removeByExample(this.syncLibraries, library);
+    // Reload libraries
+    this.loadLibraries(()=>{
+      // Update chrome storage
+      this.updateChromeStorage(()=>{
+        if(LanguageUtils.isFunction(callback)){
+          callback();
+        }
+      });
     });
   }
 

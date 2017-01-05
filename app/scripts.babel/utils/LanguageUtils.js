@@ -34,6 +34,18 @@ class LanguageUtils {
     return Object.assign(object, properties);
   }
 
+  static createCustomEvent(name, data){
+    return (new CustomEvent(name, {
+      detail: {
+        message: 'Song is changed',
+        data: data,
+        time: new Date()
+      },
+      bubbles: true,
+      cancelable: true
+    }));
+  }
+
 }
 
 module.exports = LanguageUtils;
