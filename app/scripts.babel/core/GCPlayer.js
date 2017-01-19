@@ -40,8 +40,9 @@ class GCPlayer{
     // Load extensions
     this.extensionsRunner.init();
 
-    // Load on close events
+    // Load special events
     this.loadCloseEvents();
+    this.loadChromeEvents();
   }
 
   loadCoreComponents(){
@@ -76,7 +77,26 @@ class GCPlayer{
       // Update library container chrome storage
       this.libraryContainer.updateChromeStorage();
     });
+  }
 
+  loadChromeEvents(){
+    // Multimedia keys
+    chrome.commands.onCommand.addListener((command)=>{
+      if (command === 'playPause') {
+        if(this.player.currentStatus===this.player.status.paused){
+          this.player.play();
+        }
+        else if(this.player.currentStatus===this.player.status.playing){
+          this.player.pause();
+        }
+      }
+      if (command === 'nextSong') {
+        this.player.nextSong();
+      }
+      if (command === 'previousSong') {
+        this.player.previousSong();
+      }
+    });
   }
 }
 

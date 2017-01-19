@@ -47,6 +47,7 @@
       </div>
       <div class="librarySongContainer"></div>
     </template>
+    <div id="librarySearchEmptyResult" data-activated="false">Songs not found</div>
   </div>
   <div id="playlistContainer" class="contentContainer" data-enabled="false">
     <div id="playlistSearchWrapper">
@@ -82,6 +83,7 @@
   </div>
 </div>
 <div id="playerWrapper">
+  <progress id="playerProgressBar"></progress>
   <a class="playerControl" id="previous"><img src="./images/previous.png" title="previous"></a>
   <a class="playerControl" id="play" data-activated="true"><img src="./images/play.png" title="play"></a>
   <a class="playerControl" id="pause" data-activated="false"><img src="./images/pause.png" title="pause"></a>
@@ -89,7 +91,6 @@
   <a class="playerControl" id="repeat" data-status="false"><img src="./images/repeat.png" title="repeat"></a>
   <a class="playerControl" id="random" data-status="false"><img src="./images/shuffle.png" title="random"></a>
   <span id="playerTimeValue">--:--</span>/<span id="playerTimeMax">--:--</span>
-  <progress id="playerProgressBar"></progress>
   <span id="playingSongInfo">
     <span id="album"></span>
     <span id="artist"></span>

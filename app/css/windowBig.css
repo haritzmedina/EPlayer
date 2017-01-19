@@ -2,197 +2,195 @@
 
 /* Let's get this party started */
 ::-webkit-scrollbar {
-    width: 1em;
-    cursor: pointer;
+  width: 1em;
+  cursor: pointer;
+  margin-right: 5px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(125,125,125,0.3);
-    -webkit-border-radius: 0.2em;
-    border-radius: 0.2em;
-    cursor: pointer;
+  -webkit-box-shadow: inset 0 0 6px rgba(125,125,125,0.3);
+  -webkit-border-radius: 0.2em;
+  border-radius: 0.2em;
 }
-
-/* Handle */
 ::-webkit-scrollbar-thumb {
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-    background: rgba(0,100,200,0.8);
-    -webkit-box-shadow: inset 0 0 0.1em rgba(0,0,0,0.5);
+  border-radius: 20px;
+  background: rgba(0,100,200,0.8);
+  -webkit-box-shadow: inset 0 0 0.1em rgba(0,0,0,0.5);
 }
 ::-webkit-scrollbar-thumb:window-inactive {
-    background: rgba(0,70,140,0.4);
+  background: rgba(0,70,140,0.4);
 }
 
 html{
-    height: 100%;
+  height: 100%;
 }
 
 body{
-    background-color: rgba(0,0,0,1);
-    color: white;
-    max-height: 100%;
-    margin: 0;
-    padding: 0.5em;
+  background-color: rgba(0,0,0,1);
+  color: white;
+  max-height: 100%;
+  margin: 0;
+  padding: 0.5em;
 }
 
 a{
-    cursor: pointer;
+  cursor: pointer;
 }
 
 #menu{
-    max-width: 5em;
-    min-height: 100%;
-    max-height: 100%;
-    left: 0;
-    position: absolute;
-    padding-left: 1em;
-    padding-right: 1em;
+  max-width: 5em;
+  min-height: 100%;
+  max-height: 100%;
+  left: 0;
+  position: absolute;
+  padding-left: 1em;
+  padding-right: 1em;
 }
 
 #content{
-    right: 0;
-    position: absolute;
-    width: calc(100% - 10em);
+  right: 5px;
+  position: absolute;
+  width: calc(100% - 10em);
 }
 
 /* Lateral menu */
 
 .menuElement{
-    float: none;
-    width: 4.5em;
-    display:block;
-    height: 4.5em;
-    border-radius: 5px;
-    margin: 0.25em;
-    cursor: pointer;
-    margin-bottom: 0.5em;
+  float: none;
+  width: 4.5em;
+  display:block;
+  height: 4.5em;
+  border-radius: 5px;
+  margin: 0.25em;
+  cursor: pointer;
+  margin-bottom: 0.5em;
 }
 
 .menuElement:hover{
-    border-radius: 5px;
+  border-radius: 5px;
 }
 
 #librarySelector{
-    background-color: rgba(200, 49, 107, 1);
-    background-image: url(../images/library.png);
-    background-size: 4.5em 4.5em;
+  background-color: rgba(200, 49, 107, 1);
+  background-image: url(../images/library.png);
+  background-size: 4.5em 4.5em;
 }
 
 #librarySelector:hover{
-    background-color: rgba(200, 11, 81, 1);
+  background-color: rgba(200, 11, 81, 1);
 }
 
 
 #playlistSelector{
-    background-color: rgba(50, 125, 200, 1);
-    background-image: url(../images/playlist.png);
-    background-size: 4.5em 4.5em;
+  background-color: rgba(50, 125, 200, 1);
+  background-image: url(../images/playlist.png);
+  background-size: 4.5em 4.5em;
 }
 
 #playlistSelector:hover{
-    background-color: rgba(40, 78, 200, 1);
+  background-color: rgba(40, 78, 200, 1);
 }
 
 #settingsSelector{
-    background-color: rgba(160, 160, 40, 1);
-    background-image: url(../images/settings.png);
-    background-size: 4.5em 4.5em;
+  background-color: rgba(160, 160, 40, 1);
+  background-image: url(../images/settings.png);
+  background-size: 4.5em 4.5em;
 }
 
 #settingsSelector:hover{
-    background-color: rgba(120, 120, 20, 1);
+  background-color: rgba(120, 120, 20, 1);
 }
 
 #expandSelector{
-    background-color: rgba(0, 0, 0, 1);
-    background-image: url(../images/expand.png);
-    background-size: 4.5em 4.5em;
+  background-color: rgba(0, 0, 0, 1);
+  background-image: url(../images/expand.png);
+  background-size: 4.5em 4.5em;
 }
 
 #expandSelector:hover{
-    background-color: rgba(0, 0, 0, 1);
+  background-color: rgba(0, 0, 0, 1);
 }
 
 /* Content */
 #content{
-    overflow: hidden;
-    height: calc(80% - 1em);
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
+  overflow: hidden;
+  height: calc(80% - 1em);
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
 }
 
 /* Player wrapper */
 #playerWrapper{
-    bottom: 0;
-    width:100%;
-    height: 10em;
-    position: absolute;
+  bottom: 0;
+  width:100%;
+  height: 10em;
+  position: absolute;
 }
 
 #playerControl{
-    display: block;
-    height: 20%;
+  display: block;
+  height: 20%;
 }
 
 .playerControl > img{
-    width: 6em;
+  width: 6em;
 }
 
 /* Player */
 #player{
-    display: none;
+  display: none;
 }
 
 #playerProgressBar{
-    width: 100%;
-    position: absolute;
-    left:0;
-    bottom:0;
-    height: 0.75em;
-    background-color: rgba(255,255,255,1);
-}
-
-#playerWrapper progress::-webkit-progress-bar{
-    background-color : rgba(125,125,125,0.5);
-}
-
-#playerWrapper progress::-webkit-progress-value{
-    background-color: rgba(0,100,200,0.8);
+  width: 100%;
+  position: absolute;
+  left:0;
+  bottom: 0;
+  margin-bottom: 0.5em;
+  height: 0.75em;
+  background-color: rgba(255,255,255,1);
+  cursor: pointer;
 }
 
 #playerProgressBar:hover{
-    height: 1.5em;
+  height: 1.5em;
+}
+
+#playerWrapper progress::-webkit-progress-bar{
+  background-color : rgba(50,50,50,0.5);
+}
+
+#playerWrapper progress::-webkit-progress-value{
+  background-color: rgba(0,80,150,0.8);
 }
 
 #play[data-activated=true]{
-    display: inline;
+  display: inline;
 }
 
 #play[data-activated=false]{
-    display: none;
+  display: none;
 }
 
 #pause[data-activated=true]{
-    display: inline;
+  display: inline;
 }
 
 #pause[data-activated=false]{
-    display: none;
+  display: none;
 }
 
 .contentContainer[data-enabled="false"]{
-    display:none;
+  display:none;
 }
 
 /* Library */
 
 #libraryContainer{
-    overflow: hidden;
-    height: 100%;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
+  overflow: hidden;
+  height: 100%;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
 }
 
 #librarySearchWrapper{
@@ -205,6 +203,14 @@ a{
   text-align: center;
 }
 
+#librarySearchEmptyResult[data-activated="false"]{
+  display: none;
+}
+
+#librarySearchEmptyResult[data-activated="true"]{
+  display: block;
+}
+
 #libraryControlsWrapper{
   float: left;
   right: 20px;
@@ -214,11 +220,12 @@ a{
 .libraryControl{
   background-color: rgba(200,200,200,0.8);
   background-size: 4.5em 4.5em;
-  background-image: url('/images/addMusic.png');
+  background-image: url('../images/addMusic.png');
   float: left;
   width: 50px;
   height: 50px;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 #librarySearchResults{
@@ -241,11 +248,11 @@ a{
   margin-left: 100px;
   right: 20px;
   height: 40px;
-  position:absolute;
+  float: right;
 }
 
 .libraryRemove{
-  background-image: url('/images/remove.png');
+  background-image: url('../images/remove.png');
   float: left;
   background-size: cover;
   width: 30px;
@@ -253,7 +260,7 @@ a{
 }
 
 .libraryPlay{
-  background-image: url('/images/play.png');
+  background-image: url('../images/play.png');
   float: left;
   background-size: cover;
   width: 30px;
@@ -261,102 +268,102 @@ a{
 }
 
 .librarySongElement{
-    height: 2.5em;
-    width: calc(100% - 0.25em - 0.1em - 0.3em); /* 100% - padding - border - scrollbar */
-    border: 0.1em solid rgba(125, 125, 125, 0.6);
-    border-radius: 5px;
-    padding: 0.25em;
-    margin-top: 0.5em;
+  height: 2.5em;
+  width: calc(100% - 0.25em - 0.1em - 0.3em); /* 100% - padding - border - scrollbar */
+  border: 0.1em solid rgba(125, 125, 125, 0.6);
+  border-radius: 5px;
+  padding: 0.25em;
+  margin-top: 0.5em;
 }
 
 .librarySongElement:hover{
-    background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .librarySongText{
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .librarySongElementTitle{
-    width: calc(30% - 0.5em);
-    float: left;
-    font-size: 1.5em;
+  width: calc(30% - 0.5em);
+  float: left;
+  font-size: 1.5em;
 }
 
 .librarySongElementArtist{
-    width: 30%;
-    float: left;
-    font-size: 1.5em;
+  width: 30%;
+  float: left;
+  font-size: 1.5em;
 }
 
 .librarySongElementAlbum{
-    width: 30%;
-    float: left;
-    font-size: 1.5em;
+  width: 30%;
+  float: left;
+  font-size: 1.5em;
 }
 
 .librarySongControl{
-    cursor: pointer;
-    width: 1.5em;
-    display:block;
-    float:left;
-    margin-top: 0.5em;
-    height: 1.5em;
-    background-size: 1.5em 1.5em;
-    margin-right: 0.25em;
-    margin-left: 0.25em;
+  cursor: pointer;
+  width: 1.5em;
+  display:block;
+  float:left;
+  margin-top: 0.5em;
+  height: 1.5em;
+  background-size: 1.5em 1.5em;
+  margin-right: 0.25em;
+  margin-left: 0.25em;
 }
 
 .librarySongPlayButton{
-    background-image: url(../images/play.png);
+  background-image: url(../images/play.png);
 }
 
 .librarySongAddPlaylist{
-    background-image: url(../images/add_playlist.png);
+  background-image: url(../images/add_playlist.png);
 }
 
 /* Contextual widgets */
 .contextButton{
-    min-width: 8em;
-    min-height: 2em;
-    border: 1px;
-    border-radius: 3px;
-    background-color: white;
-    color: black;
-    padding: 1em;
-    cursor: pointer;
+  min-width: 8em;
+  min-height: 2em;
+  border: 1px;
+  border-radius: 3px;
+  background-color: white;
+  color: black;
+  padding: 1em;
+  cursor: pointer;
 }
 
 .contextButton:hover{
-    background-color: rgba(200, 200, 200, 0.3);
+  background-color: rgba(200, 200, 200, 0.3);
 }
 
 .contextButtonOk{
-    background-color: rgba(125, 210, 125, 1);
+  background-color: rgba(125, 210, 125, 1);
 }
 .contextButtonOk:hover{
-    background-color: rgba(105, 190, 105, 1);
+  background-color: rgba(105, 190, 105, 1);
 }
 
 .contextButtonFail{
-    background-color: rgba(200, 50, 50, 1);
+  background-color: rgba(200, 50, 50, 1);
 }
 .contextButtonFail:hover{
-    background-color: rgba(180, 30, 30, 1);
+  background-color: rgba(180, 30, 30, 1);
 }
 
 .contextButtonWarning{
-    background-color: rgba(160, 160, 40, 1);
+  background-color: rgba(160, 160, 40, 1);
 }
 .contextButtonWarning:hover{
-    background-color: rgba(140, 140, 20, 1);
+  background-color: rgba(140, 140, 20, 1);
 }
 
 .contextButtonInfo{
-    background-color: rgba(100, 100, 200, 1);
+  background-color: rgba(100, 100, 200, 1);
 }
 .contextButtonInfo:hover{
-    background-color: rgba(80, 80, 180, 1);
+  background-color: rgba(80, 80, 180, 1);
 }

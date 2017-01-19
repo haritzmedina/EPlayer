@@ -3,6 +3,7 @@
 const uuid = require('uuid');
 const Logger = require('../../io/Logger');
 const LanguageUtils = require('../../utils/LanguageUtils');
+const DataUtils = require('../../utils/DataUtils');
 const Notification = require('../../io/Notification');
 const Playlist = require('./Playlist');
 
@@ -71,7 +72,7 @@ class Library{
     // Print songs of library
     for(let i=0;i<this.songs.length;i++){
       let song = this.songs[i];
-      song.printLibrarySong(this.id, librarySongContainer);
+      song.printLibrarySong(librarySongContainer);
     }
 
     // Add library to the library container
@@ -84,6 +85,14 @@ class Library{
 
   getId(){
     return this.id;
+  }
+
+  getSongsByTextFilter(textFilter){
+    return DataUtils.queryByContains(this.songs, {
+      artist: textFilter,
+      album: textFilter,
+      title: textFilter
+    }, DataUtils.stringInclude);
   }
 
 }

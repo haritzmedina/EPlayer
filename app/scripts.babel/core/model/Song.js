@@ -15,13 +15,12 @@ class Song{
     this.src = src;
   }
 
-  printLibrarySong(libraryId, container){
+  printLibrarySong(container){
     // Display song using librarySongElement template
     let template = document.querySelector('#librarySongElement');
     let content = document.importNode(template.content, true);
 
     let songDiv = content.querySelector('.librarySongElement');
-    songDiv.dataset.libraryId = libraryId;
     songDiv.dataset.songId = this.id;
     let artistDiv = content.querySelector('.librarySongElementArtist');
     artistDiv.innerText = this.artist;

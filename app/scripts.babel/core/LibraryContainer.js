@@ -16,10 +16,12 @@ class LibraryContainer{
   constructor(){
     this.localLibraries = [];
     this.syncLibraries = [];
+    this.librarySearchInput = document.querySelector('#librarySearch');
+    this.addLibraryButton = document.querySelector('#addLibraryButton');
   }
 
   /**
-   * Initialize the library container (retrieves saved data from Chrome Storage)
+   * Initialize the library container (retrieves saved data from Chrome Storage) and initialize components behaviour
    * @param callback The callback function to execute after library container is initialized
    */
   init(callback) {
@@ -61,6 +63,30 @@ class LibraryContainer{
       Logger.log(this.syncLibraries);
       callback();
     });
+
+    // Handler of search input
+    let searchEvent = (event)=>{
+      let filterText = this.librarySearchInput.value;
+      this.searchSongsByTextFilter(filterText, (songs)=>{
+        if(songs.length===0){
+          if(filterText.length===0){
+            this.printLibraries();
+          }
+          else{
+            this.printSearchEmpty();
+          }
+        }
+        else{
+          this.printSearchedSongs(songs);
+        }
+      });
+    };
+    this.librarySearchInput.addEventListener('search', searchEvent); // When clear button is clicked
+    this.librarySearchInput.addEventListener('keyup', searchEvent); // When any text input is entered
+    // Handler for add library button
+    this.addLibraryButton.addEventListener('click', (event)=>{
+      this.promptNewLocalLibraryForm();
+    });
   }
 
   /**
@@ -83,6 +109,16 @@ class LibraryContainer{
     Promise.all(promises).then(()=>{
       this.updateChromeStorage(callback);
     });
+  }
+
+  printLibraries(callback){
+    // TODO Check if it is better to hide and show a container or reprint everything
+    let container = document.getElementById('librarySearchResults');
+    container.innerText = '';
+
+    for(let i=0;i<this.localLibraries.length;i++){
+      this.localLibraries[i].printLibrary();
+    }
   }
 
   /**
@@ -162,6 +198,42 @@ class LibraryContainer{
     return songs;
   }
 
+  searchSongsByTextFilter(textFilter, callback){
+    if(textFilter.length>0){
+      let results = [];
+      let promises = [];
+      for(let i=0;i<this.localLibraries.length;i++){
+        promises.push(new Promise((resolve, reject)=>{
+          results = results.concat(this.localLibraries[i].getSongsByTextFilter(textFilter));
+          resolve();
+        }));
+      }
+      Promise.all(promises).then(()=>{
+        if(LanguageUtils.isFunction(callback)){
+          callback(results);
+        }
+      });
+    }
+    else{
+      if(LanguageUtils.isFunction(callback)){
+        callback([]);
+      }
+    }
+  }
+
+  printSearchedSongs(songs){
+    let container = document.getElementById('librarySearchResults');
+    container.innerText = '';
+
+    for(let i=0;i<songs.length;i++){
+      songs[i].printLibrarySong(container);
+    }
+  }
+
+  printSearchEmpty() {
+    let container = document.getElementById('librarySearchResults');
+    container.innerText = 'No songs found';
+  }
 }
 
 module.exports = LibraryContainer;

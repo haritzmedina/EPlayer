@@ -233,7 +233,7 @@ class Player{
 
   randomSong(){
     this.playlist.setCurrentRandomSong();
-    // TODO Check if it is a song
+    // Check if it is a song
     if(this.playlist.currentSong!==null){
       // Stop current song
       this.changeStatus(this.status.stopped);

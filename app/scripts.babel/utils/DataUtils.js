@@ -1,5 +1,7 @@
 'use strict';
 
+const LanguageUtils = require('./LanguageUtils');
+
 /**
  *
  */
@@ -45,11 +47,33 @@ class DataUtils{
     return DataUtils.filterArray(array, props, {index: true})[0].index;
   }
 
+  static queryByContains(array, props, customComparison){
+    if(customComparison){
+      return DataUtils.filterArray(array, props, {contains: true, properties: {comparison: customComparison}});
+    }
+    else{
+      return DataUtils.filterArray(array, props, {contains: true});
+    }
+  }
+
   static filterArray(array, props, opts){
     let filteredArray = [];
     for(let i=0;i<array.length;i++){
       let elem = array[i];
-      if(DataUtils.arePropertiesIncluded(elem, props)){
+      let matchedElem = null;
+      // Filter type (contains at least one prop, or all the props)
+      if(opts && opts.contains){
+        if(DataUtils.isPropertyIncluded(elem, props, opts)){
+          matchedElem = elem;
+        }
+      }
+      else{
+        if(DataUtils.arePropertiesIncluded(elem, props)){
+          matchedElem = elem;
+        }
+      }
+      // If a result is matched, add it
+      if(matchedElem){
         if(opts && opts.index){
           filteredArray.push({index: i, obj: elem});
         }
@@ -70,6 +94,32 @@ class DataUtils{
       }
     }
     return true;
+  }
+
+  static isPropertyIncluded(objectSource, properties, opts){
+    let keys = Object.keys(properties);
+    for(let i=0;i<keys.length;i++){
+      let key = keys[i];
+      // TODO FIXIT!!! Incluye texto, no texto igual
+      if(opts.properties && opts.properties.comparison && LanguageUtils.isFunction(opts.properties.comparison)){
+        if(opts.properties.comparison(objectSource[key], properties[key])){
+          return true;
+        }
+        else{
+          if(objectSource[key]===properties[key]){
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  static stringInclude(str1, str2){
+    if(str1 && str2){
+      return str1.toLowerCase().includes(str2.toLowerCase());
+    }
+    return false;
   }
 
 }
