@@ -1,12 +1,16 @@
 'use strict';
 
-const ChromeStorage = require('../io/ChromeStorage');
-const ChromeStorageNamespaces = require('../io/ChromeStorageNamespaces');
+const LocalStorage = require('../io/LocalStorage');
+const StorageNamespaces = require('../io/StorageNamespaces');
 const LanguageUtils = require('../utils/LanguageUtils');
 const Logger = require('../io/Logger');
 const LocalLibrary = require('./model/LocalLibrary');
 const DataUtils = require('../utils/DataUtils');
 const Library = require('./model/Library');
+//const Electron = window.require('electron');
+const {dialog} = window.require('electron').remote;
+
+//const dialog = Electron.remote.require('dialog');
 
 /**
  * Library container. A container and manager for libraries defined by the user.
@@ -21,15 +25,14 @@ class LibraryContainer{
   }
 
   /**
-   * Initialize the library container (retrieves saved data from Chrome Storage) and initialize components behaviour
+   * Initialize the library container (retrieves saved data from Local Storage) and initialize components behaviour
    * @param callback The callback function to execute after library container is initialized
    */
   init(callback) {
-    // Prepare async promises
-    let promises = [];
-    // Load local saved libraries data from chrome storage
-    promises.push(new Promise((resolve, reject) => {
-      ChromeStorage.getData(ChromeStorageNamespaces.library.container, ChromeStorage.local, (error, result)=> {
+    // Load local saved libraries data from local storage
+    (new Promise((resolve, reject) => {
+      LocalStorage.init();
+      LocalStorage.getData(StorageNamespaces.library.container, (error, result)=> {
         if(error){
           Logger.log(error);
         }
@@ -41,28 +44,11 @@ class LibraryContainer{
         }
         resolve();
       });
-    }));
-    // Load sync saved libraries data from chrome storage
-    promises.push(new Promise((resolve, reject) => {
-      ChromeStorage.getData(ChromeStorageNamespaces.library.container, ChromeStorage.sync, (error, result)=>{
-        if(error){
-          Logger.log(error);
-        }
-        this.syncLibraries = [];
-        if (!LanguageUtils.isEmptyObject(result)) {
-          for(let i=0;i<result.length;i++){
-            // TODO Depending on Library is needed to create an object instead of 'new Library()'
-            this.syncLibraries.push(LanguageUtils.fillObject(new Library(), result[i]));
-          }
-        }
-        resolve();
-      });
-    }));
-    Promise.all(promises).then(()=>{
+    })).then(()=>{
       Logger.log(this.localLibraries);
-      Logger.log(this.syncLibraries);
       callback();
     });
+
 
     // Handler of search input
     let searchEvent = (event)=>{
@@ -107,7 +93,7 @@ class LibraryContainer{
       }));
     }
     Promise.all(promises).then(()=>{
-      this.updateChromeStorage(callback);
+      this.updateLocalStorage(callback);
     });
   }
 
@@ -132,7 +118,7 @@ class LibraryContainer{
       this.localLibraries.push(library);
       library.loadLibrary(()=>{
         // Update local library
-        this.updateChromeStorage(callback);
+        this.updateLocalStorage(callback);
       });
     }
     else{
@@ -140,8 +126,8 @@ class LibraryContainer{
     }
   }
 
-  updateChromeStorage(callback){
-    ChromeStorage.setData(ChromeStorageNamespaces.library.container, this.localLibraries, ChromeStorage.local, ()=>{
+  updateLocalStorage(callback){
+    LocalStorage.setData(StorageNamespaces.library.container, this.localLibraries, ()=>{
       if(LanguageUtils.isFunction(callback)){
         callback();
       }
@@ -154,8 +140,8 @@ class LibraryContainer{
     DataUtils.removeByExample(this.syncLibraries, library);
     // Reload libraries
     this.loadLibraries(()=>{
-      // Update chrome storage
-      this.updateChromeStorage(()=>{
+      // Update local storage
+      this.updateLocalStorage(()=>{
         if(LanguageUtils.isFunction(callback)){
           callback();
         }
@@ -164,25 +150,14 @@ class LibraryContainer{
   }
 
   promptNewLocalLibraryForm(callback){
-    chrome.fileSystem.chooseEntry({ type: 'openDirectory' }, (dirEntry)=>{
-      // Save new folder reference on model
-      if(dirEntry){
-        let folderPointer = chrome.fileSystem.retainEntry(dirEntry);
-        // TODO retrieve and save localpath and entrypoint
-        chrome.fileSystem.getDisplayPath(dirEntry, (absolutePath) => {
-          let localLibrary = new LocalLibrary(folderPointer, absolutePath);
-          this.addLocalLibrary(localLibrary, ()=>{
-            if(LanguageUtils.isFunction(callback)){
-              callback();
-            }
-          });
-        });
-      }
-      else{
+    dialog.showOpenDialog({properties: ['openDirectory']}, (folderpath)=>{
+      // TODO Folder class source instead of string
+      let localLibrary = new LocalLibrary(folderpath);
+      this.addLocalLibrary(localLibrary, ()=>{
         if(LanguageUtils.isFunction(callback)){
           callback();
         }
-      }
+      });
     });
   }
 
@@ -220,6 +195,7 @@ class LibraryContainer{
       }
     }
   }
+
 
   printSearchedSongs(songs){
     let container = document.getElementById('librarySearchResults');
