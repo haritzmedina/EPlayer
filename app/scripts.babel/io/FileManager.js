@@ -1,7 +1,8 @@
 'use strict';
 
-var Logger = require('./Logger');
-var LanguageUtils = require('./../utils/LanguageUtils');
+const Logger = require('./Logger');
+const LanguageUtils = require('./../utils/LanguageUtils');
+const fs = require('fs');
 
 /**
  *
@@ -16,17 +17,17 @@ class FileManager{
    */
   static readFolder(folderEntry, opts, callback){
     // Create directory reader
-    var dirReader = folderEntry.createReader();
-    var files = [];
+    let dirReader = folderEntry.createReader();
+    let files = [];
     // Recursively read entries til finished
-    var readEntries = function() {
+    let readEntries = function() {
       dirReader.readEntries((results) => {
         if (results.length) {
-          var fileExtensionRegEx = /(?:\.([^.]+))?$/;
-          for (var i = 0; i < results.length; i++) {
+          let fileExtensionRegEx = /(?:\.([^.]+))?$/;
+          for (let i = 0; i < results.length; i++) {
             // If is set a file extension filter, only add files which has this extension
             if(opts && opts.fileExtension){
-              var extension = fileExtensionRegEx.exec(results[i].name);
+              let extension = fileExtensionRegEx.exec(results[i].name);
               if (extension[0] === opts.fileExtension) {
                 files.push(results[i]);
               }
@@ -51,6 +52,40 @@ class FileManager{
         callback(entryPoint);
       }
     });
+  }
+
+  static getAppDataFolderPath(){
+    return process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : '/var/local');
+  }
+
+  static getUserStorageFolderPath(){
+    return FileManager.getAppDataFolderPath()+'/GCPlayer/';
+  }
+
+  static readJSONFile(filepath){
+    return JSON.parse(fs.readFileSync(filepath, 'utf8'));
+  }
+
+  /**
+   * Create a json file from jsonContent and storages in the filepath
+   * @param filepath
+   * @param jsonContent
+   */
+  static createJSONFile(filepath, jsonContent, overwrite){
+    if(overwrite){
+      fs.writeFile(filepath, JSON.stringify(jsonContent, null, 4));
+    }
+    else{
+      if (!fs.existsSync(filepath)){
+        fs.writeFile(filepath, JSON.stringify(jsonContent, null, 4));
+      }
+    }
+  }
+
+  static createFolder(dir){
+    if (!fs.existsSync(dir)){
+      fs.mkdirSync(dir);
+    }
   }
 }
 
