@@ -39,8 +39,9 @@ class GCPlayer{
 
     // Load special events
     // TODO FIX this functions (handlers when app is closed and multimedia buttons)
-    /*this.loadCloseEvents();
-    this.loadChromeEvents();*/
+    this.loadCloseEvents();
+
+    /*this.loadChromeEvents();*/
   }
 
   loadCoreComponents(){
@@ -70,10 +71,10 @@ class GCPlayer{
   }
 
   loadCloseEvents() {
-    chrome.runtime.onSuspend.addListener(()=>{
+    window.onbeforeunload = ()=>{
       // Update library container chrome storage
-      this.libraryContainer.updateChromeStorage();
-    });
+      this.libraryContainer.updateLocalStorage();
+    };
   }
 
   loadChromeEvents(){
