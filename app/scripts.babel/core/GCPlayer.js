@@ -1,14 +1,11 @@
 'use strict';
 
 const ExtensionsRunner = require('../extensions/ExtensionsRunner');
-const ChromeStorage = require('../io/ChromeStorage');
 const LibraryContainer = require('./LibraryContainer');
 const Player = require('./Player');
 const Menu = require('./Menu');
 const PlaylistContainer = require('./PlaylistContainer');
 const Logger = require('../io/Logger');
-
-const LocalLibrary = require('./model/LocalLibrary');
 
 /**
  * The main file of GCPlayer
@@ -41,8 +38,9 @@ class GCPlayer{
     this.extensionsRunner.init();
 
     // Load special events
-    this.loadCloseEvents();
-    this.loadChromeEvents();
+    // TODO FIX this functions (handlers when app is closed and multimedia buttons)
+    /*this.loadCloseEvents();
+    this.loadChromeEvents();*/
   }
 
   loadCoreComponents(){
@@ -63,8 +61,7 @@ class GCPlayer{
 
     // Load player
     this.player.initPanelHandlers();
-
-
+    
     // Load interface
     this.menu.init();
 

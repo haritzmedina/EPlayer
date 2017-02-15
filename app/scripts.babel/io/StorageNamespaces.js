@@ -10,14 +10,14 @@
 /**
  *
  */
-class ChromeStorageNamespaces{
+class StorageNamespaces{
 
 }
 
-ChromeStorageNamespaces.library = {
+StorageNamespaces.library = {
   container: 'GCPlayer.library.container',
   playlists: 'GCPlayer.library.playlist',
   songs: 'GCPlayer.library.songs'
 };
 
-module.exports = ChromeStorageNamespaces;
+module.exports = StorageNamespaces;

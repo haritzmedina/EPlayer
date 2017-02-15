@@ -33,14 +33,6 @@ class Library{
     callback();
   }
 
-  /**
-   * Returns if the library is syncable in multiple devices (only for cloud based libraries)
-   * @returns {boolean}
-   */
-  isSyncable(){
-    return false;
-  }
-
   printLibrary(callback){
     // Retrieve container to print elements
     let container = document.getElementById('librarySearchResults');

@@ -7,10 +7,8 @@ const Logger = require('../io/Logger');
 const LocalLibrary = require('./model/LocalLibrary');
 const DataUtils = require('../utils/DataUtils');
 const Library = require('./model/Library');
-//const Electron = window.require('electron');
-const {dialog} = window.require('electron').remote;
 
-//const dialog = Electron.remote.require('dialog');
+const {dialog} = window.require('electron').remote;
 
 /**
  * Library container. A container and manager for libraries defined by the user.
@@ -152,7 +150,7 @@ class LibraryContainer{
   promptNewLocalLibraryForm(callback){
     dialog.showOpenDialog({properties: ['openDirectory']}, (folderpath)=>{
       // TODO Folder class source instead of string
-      let localLibrary = new LocalLibrary(folderpath);
+      let localLibrary = new LocalLibrary(folderpath[0]);
       this.addLocalLibrary(localLibrary, ()=>{
         if(LanguageUtils.isFunction(callback)){
           callback();

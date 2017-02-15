@@ -9,8 +9,8 @@ const SongFile = require('./SongFile');
 
 class LocalLibrary extends Library{
 
-  constructor(libraryFolder, absolutePath){
-    super(libraryFolder, absolutePath);
+  constructor(absolutePath){
+    super(absolutePath, absolutePath);
     this.absolutePath = absolutePath;
   }
 
@@ -24,46 +24,43 @@ class LocalLibrary extends Library{
 
   readLibrary(callback){
     // Read local library
-    FileManager.restoreEntry(this.source, (entryFolder)=>{
-      Logger.log('Restored: '+this.source);
-      FileManager.readFolder(entryFolder, {fileExtension: '.mp3'}, (files)=>{
-        let songs = [];
-        let promises = [];
-        for(let i=0;i<files.length;i++){
-          // The id of the song is: libraryId+'#'+fullPath (of the song)
-          let songId = this.id+'#'+files[i].fullPath;
-          // TODO Check if song is already added (and not changed)
-          let filteredSavedSongs = DataUtils.queryByExample(this.songs, {id: songId});
-          let savedSong = {};
-          if(filteredSavedSongs.length>0){
-            savedSong = filteredSavedSongs[0];
-          }
-          // If song is not saved (or changed), retrieve its info
-          if(LanguageUtils.isEmptyObject(savedSong)){
-            promises.push(new Promise((resolve, reject) =>{
-              SongFile.readSongFileMetadata(files[i], (error, songMetadata)=>{
-                if(error){
-                  Logger.log(error);
-                  resolve();
-                }
-                else{
-                  songs.push(new SongFile(songId, files[i], songMetadata));
-                  resolve();
-                }
-              });
-            }));
-          }
-          // If song doesn't change, just cast to SongFile
-          else{
-            songs.push(new SongFile(songId, files[i], savedSong));
-          }
+    FileManager.readFolder(this.source, {fileExtension: '.mp3'}, (files)=>{
+      let songs = [];
+      let promises = [];
+      for(let i=0;i<files.length;i++){
+        // The id of the song is: libraryId+'#'+fullPath (of the song)
+        let songId = this.id+'#'+files[i].fullPath;
+        // TODO Check if song is already added (and not changed)
+        let filteredSavedSongs = DataUtils.queryByExample(this.songs, {id: songId});
+        let savedSong = {};
+        if(filteredSavedSongs.length>0){
+          savedSong = filteredSavedSongs[0];
         }
-        Promise.all(promises).then(()=>{
-          this.songs = songs;
-          if(LanguageUtils.isFunction(callback)){
-            callback();
-          }
-        });
+        // If song is not saved (or changed), retrieve its info
+        if(LanguageUtils.isEmptyObject(savedSong)){
+          promises.push(new Promise((resolve, reject) =>{
+            SongFile.readSongFileMetadata(files[i], (error, songMetadata)=>{
+              if(error){
+                Logger.log(error);
+                resolve();
+              }
+              else{
+                songs.push(new SongFile(songId, files[i], songMetadata));
+                resolve();
+              }
+            });
+          }));
+        }
+        // If song doesn't change, just cast to SongFile
+        else{
+          songs.push(new SongFile(songId, files[i], savedSong));
+        }
+      }
+      Promise.all(promises).then(()=>{
+        this.songs = songs;
+        if(LanguageUtils.isFunction(callback)){
+          callback();
+        }
       });
     });
   }

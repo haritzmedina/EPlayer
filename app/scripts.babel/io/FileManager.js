@@ -10,49 +10,39 @@ const fs = require('fs');
 class FileManager{
 
   /**
-   * Read a filesystem folderEntry and return (through callback) the files
-   * @param folderEntry
+   * Read a filesystem folderpath and return (through callback) the files
+   * @param folderpath
    * @param opts An options object. Eg.: {fileExtension: '.mp3', recursiveFolder: true}
    * @param callback
    */
-  static readFolder(folderEntry, opts, callback){
-    // Create directory reader
-    let dirReader = folderEntry.createReader();
+  static readFolder(folderpath, opts, callback){
     let files = [];
-    // Recursively read entries til finished
-    let readEntries = function() {
-      dirReader.readEntries((results) => {
-        if (results.length) {
+    fs.exists(folderpath, (exists)=>{
+      if(exists){
+        fs.readdir(folderpath, {}, (err, retrievedFiles)=>{
           let fileExtensionRegEx = /(?:\.([^.]+))?$/;
-          for (let i = 0; i < results.length; i++) {
-            // If is set a file extension filter, only add files which has this extension
+          for(let index in retrievedFiles){
+            let file = retrievedFiles[index];
             if(opts && opts.fileExtension){
-              let extension = fileExtensionRegEx.exec(results[i].name);
+              let extension = fileExtensionRegEx.exec(file);
               if (extension[0] === opts.fileExtension) {
-                files.push(results[i]);
+                files.push(folderpath+'\\'+file);
               }
             }
             else{
-              files.push(results[i]);
+              files.push(folderpath+'\\'+file);
             }
           }
-          readEntries();
-        } else {
           console.log('Folder contains ' + files.length + ' files.');
           callback(files);
-        }
-      });
-    };
-    readEntries();
-  }
-
-  static restoreEntry(entry, callback){
-    chrome.fileSystem.restoreEntry(entry, function (entryPoint) {
-      if(LanguageUtils.isFunction(callback)){
-        callback(entryPoint);
+        });
+      }
+      else{
+        callback('Folder not found');
       }
     });
   }
+
 
   static getAppDataFolderPath(){
     return process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : '/var/local');
