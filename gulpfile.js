@@ -68,6 +68,15 @@ gulp.task('build', (cb) => {
   runSequence('lint', 'size', cb);
 });
 
+gulp.task('package', (cb)=>{
+  packager({
+    dir: './app',
+    icon: './app/icon.png',
+    overwrite: true,
+    out: './package'
+  }, function done_callback (err, appPaths) {});
+});
+
 gulp.task('default', ['clean'], cb => {
   runSequence('build', cb);
 });
