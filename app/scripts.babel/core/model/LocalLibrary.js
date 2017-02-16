@@ -29,7 +29,7 @@ class LocalLibrary extends Library{
       let promises = [];
       for(let i=0;i<files.length;i++){
         // The id of the song is: libraryId+'#'+fullPath (of the song)
-        let songId = this.id+'#'+files[i].fullPath;
+        let songId = this.id+'#'+files[i];
         // TODO Check if song is already added (and not changed)
         let filteredSavedSongs = DataUtils.queryByExample(this.songs, {id: songId});
         let savedSong = {};
@@ -72,7 +72,6 @@ class LocalLibrary extends Library{
       // Print library in interface
       this.printLibrary(callback);
     });
-
   }
 
   printLibrary(callback){

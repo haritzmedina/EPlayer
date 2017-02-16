@@ -16,8 +16,7 @@ const {dialog} = window.require('electron').remote;
  */
 class LibraryContainer{
   constructor(){
-    this.localLibraries = [];
-    this.syncLibraries = [];
+    this.libraries = [];
     this.librarySearchInput = document.querySelector('#librarySearch');
     this.addLibraryButton = document.querySelector('#addLibraryButton');
   }
@@ -30,20 +29,20 @@ class LibraryContainer{
     // Load local saved libraries data from local storage
     (new Promise((resolve, reject) => {
       LocalStorage.init();
-      LocalStorage.getData(StorageNamespaces.library.container, (error, result)=> {
+      LocalStorage.getData('GCPlayer.library.container', (error, result)=> {
         if(error){
           Logger.log(error);
         }
-        this.localLibraries = [];
+        this.libraries = [];
         if (!LanguageUtils.isEmptyObject(result)) {
           for(let i=0;i<result.length;i++){
-            this.localLibraries.push(LanguageUtils.fillObject(new LocalLibrary(), result[i]));
+            this.libraries.push(LanguageUtils.fillObject(new LocalLibrary(), result[i]));
           }
         }
         resolve();
       });
     })).then(()=>{
-      Logger.log(this.localLibraries);
+      Logger.log(this.libraries);
       callback();
     });
 
@@ -82,9 +81,9 @@ class LibraryContainer{
     container.innerText = '';
 
     let promises = [];
-    for(let i=0;i<this.localLibraries.length;i++){
+    for(let i=0;i<this.libraries.length;i++){
       promises.push(new Promise((resolve, reject)=>{
-        let localLibrary = this.localLibraries[i];
+        let localLibrary = this.libraries[i];
         localLibrary.loadLibrary(()=>{
           resolve();
         });
@@ -100,8 +99,8 @@ class LibraryContainer{
     let container = document.getElementById('librarySearchResults');
     container.innerText = '';
 
-    for(let i=0;i<this.localLibraries.length;i++){
-      this.localLibraries[i].printLibrary();
+    for(let i=0;i<this.libraries.length;i++){
+      this.libraries[i].printLibrary();
     }
   }
 
@@ -112,8 +111,8 @@ class LibraryContainer{
    */
   addLocalLibrary(library, callback){
     // Check if library is already added
-    if(DataUtils.queryByExample(this.localLibraries, {absolutePath: library.absolutePath}).length===0){
-      this.localLibraries.push(library);
+    if(DataUtils.queryByExample(this.libraries, {absolutePath: library.absolutePath}).length===0){
+      this.libraries.push(library);
       library.loadLibrary(()=>{
         // Update local library
         this.updateLocalStorage(callback);
@@ -125,7 +124,7 @@ class LibraryContainer{
   }
 
   updateLocalStorage(callback){
-    LocalStorage.setData(StorageNamespaces.library.container, this.localLibraries, ()=>{
+    LocalStorage.setData(StorageNamespaces.library.container, this.libraries, ()=>{
       if(LanguageUtils.isFunction(callback)){
         callback();
       }
@@ -134,8 +133,7 @@ class LibraryContainer{
 
   removeLibrary(library, callback){
     // Remove library from local or sync (depending on where it is
-    DataUtils.removeByExample(this.localLibraries, library);
-    DataUtils.removeByExample(this.syncLibraries, library);
+    DataUtils.removeByExample(this.libraries, library);
     // Reload libraries
     this.loadLibraries(()=>{
       // Update local storage
@@ -160,13 +158,13 @@ class LibraryContainer{
   }
 
   areLibrariesDefined(){
-    return this.localLibraries.length+this.syncLibraries.length>0;
+    return this.libraries.length>0;
   }
 
   retrieveAllSongs(){
     let songs = [];
-    for(let i=0;i<this.localLibraries.length;i++){
-      songs = songs.concat(this.localLibraries[i].retrieveSongs());
+    for(let i=0;i<this.libraries.length;i++){
+      songs = songs.concat(this.libraries[i].retrieveSongs());
     }
     return songs;
   }
@@ -175,9 +173,9 @@ class LibraryContainer{
     if(textFilter.length>0){
       let results = [];
       let promises = [];
-      for(let i=0;i<this.localLibraries.length;i++){
+      for(let i=0;i<this.libraries.length;i++){
         promises.push(new Promise((resolve, reject)=>{
-          results = results.concat(this.localLibraries[i].getSongsByTextFilter(textFilter));
+          results = results.concat(this.libraries[i].getSongsByTextFilter(textFilter));
           resolve();
         }));
       }

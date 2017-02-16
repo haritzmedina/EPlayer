@@ -7,6 +7,8 @@ const Menu = require('./Menu');
 const PlaylistContainer = require('./PlaylistContainer');
 const Logger = require('../io/Logger');
 
+const {globalShortcut} = window.require('electron').remote;
+
 /**
  * The main file of GCPlayer
  * @author Haritz Medina <me@haritzmedina.com>
@@ -40,6 +42,7 @@ class GCPlayer{
     // Load special events
     // TODO FIX this functions (handlers when app is closed and multimedia buttons)
     this.loadCloseEvents();
+    this.loadMultimediaEvents();
 
     /*this.loadChromeEvents();*/
   }
@@ -75,6 +78,27 @@ class GCPlayer{
       // Update library container chrome storage
       this.libraryContainer.updateLocalStorage();
     };
+  }
+
+  loadMultimediaEvents(){
+    // TODO based on settings defined by the user
+    // Play/pause shortcut
+    globalShortcut.register('Control+Shift+6', () => {
+      if(this.player.currentStatus===this.player.status.paused){
+        this.player.play();
+      }
+      else if(this.player.currentStatus===this.player.status.playing){
+        this.player.pause();
+      }
+    });
+    // Previous song shortcut
+    globalShortcut.register('Control+Shift+5', () => {
+      this.player.previousSong();
+    });
+    // Next song shortcut
+    globalShortcut.register('Control+Shift+7', () => {
+      this.player.nextSong();
+    });
   }
 
   loadChromeEvents(){
