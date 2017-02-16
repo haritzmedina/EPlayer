@@ -4,7 +4,7 @@
  */
 'use strict';
 
-var jQuery = require('jquery');
+const jQuery = require('jquery');
 
 class LanguageUtils {
 
@@ -37,7 +37,7 @@ class LanguageUtils {
   static createCustomEvent(name, data){
     return (new CustomEvent(name, {
       detail: {
-        message: 'Song is changed',
+        message: name,
         data: data,
         time: new Date()
       },
@@ -45,7 +45,6 @@ class LanguageUtils {
       cancelable: true
     }));
   }
-
 }
 
 module.exports = LanguageUtils;
