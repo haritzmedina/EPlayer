@@ -71,7 +71,7 @@ gulp.task('build', (cb) => {
 gulp.task('package', (cb)=>{
   packager({
     dir: './app',
-    icon: './app/icon.png',
+    icon: './app/icon.ico',
     overwrite: true,
     out: './package'
   }, function done_callback (err, appPaths) {});
