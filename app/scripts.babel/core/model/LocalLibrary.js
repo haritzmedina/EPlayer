@@ -26,10 +26,10 @@ class LocalLibrary extends Library{
     // Read local library
     FileManager.readFolder(this.source, {fileExtension: '.mp3'}, (files)=>{
       let songs = [];
-      let promises = [];
+      let readFileCallbacks = [];
       for(let i=0;i<files.length;i++){
-        // The id of the song is: libraryId+'#'+fullPath (of the song)
-        let songId = this.id+'#'+files[i];
+        let file = files[i];
+        let songId = this.id+'#'+file;
         // TODO Check if song is already added (and not changed)
         let filteredSavedSongs = DataUtils.queryByExample(this.songs, {id: songId});
         let savedSong = {};
@@ -38,31 +38,54 @@ class LocalLibrary extends Library{
         }
         // If song is not saved (or changed), retrieve its info
         if(LanguageUtils.isEmptyObject(savedSong)){
-          promises.push(new Promise((resolve, reject) =>{
-            SongFile.readSongFileMetadata(files[i], (error, songMetadata)=>{
-              if(error){
-                Logger.log(error);
-                resolve();
+          if(readFileCallbacks.length<=0){
+            readFileCallbacks.push(this.retrieveReadLocalFileHandler(file, songs, ()=>{
+              this.songs = songs;
+              if(LanguageUtils.isFunction(callback)){
+                callback();
               }
-              else{
-                songs.push(new SongFile(songId, files[i], songMetadata));
-                resolve();
-              }
-            });
-          }));
+            }));
+          }
+          else{
+            readFileCallbacks.push(
+              this.retrieveReadLocalFileHandler(file, songs, readFileCallbacks[readFileCallbacks.length-1])
+            );
+          }
         }
         // If song doesn't change, just cast to SongFile
         else{
           songs.push(new SongFile(songId, files[i], savedSong));
         }
       }
-      Promise.all(promises).then(()=>{
+      if(readFileCallbacks.length>0){
+        readFileCallbacks[readFileCallbacks.length-1]();
+      }
+      else{
         this.songs = songs;
         if(LanguageUtils.isFunction(callback)){
           callback();
         }
-      });
+      }
     });
+  }
+
+  retrieveReadLocalFileHandler(file, songsArray, callback){
+    // TODO Dispatch event with the progression of reading files
+    let songId = this.id+'#'+file;
+    return ()=>{
+      SongFile.readSongFileMetadata(file, (error, songMetadata)=>{
+        if(error){
+          Logger.log(error);
+        }
+        else{
+          console.log('Readed '+file);
+          songsArray.unshift(new SongFile(songId, file, songMetadata));
+        }
+        if(LanguageUtils.isFunction(callback)){
+          callback();
+        }
+      });
+    }
   }
 
   loadLibrary(callback){

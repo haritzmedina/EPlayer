@@ -1,9 +1,13 @@
 'use strict';
 
+const LanguageUtils = require('../utils/LanguageUtils');
+
 class Notification{
 
   static createNotification(id, options, callback){
-    chrome.notifications.create(id, options, callback);
+    if(LanguageUtils.isFunction(callback)){
+      callback();
+    }
   }
 
   static createTextNotification(id, title, message){

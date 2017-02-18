@@ -19,18 +19,23 @@ class SongFile extends Song{
     console.log('Reading: '+path.normalize(filepath));
     try{
       id3(path.normalize(filepath), (err, tags)=>{
-        let metadata = {};
-        if (tags.artist !== null) {
-          metadata.artist = tags.artist;
+        try{
+          let metadata = {};
+          if (tags.artist !== null) {
+            metadata.artist = tags.artist;
+          }
+          if (tags.title !== null) {
+            metadata.title = tags.title;
+          }
+          if (tags.album !== null) {
+            metadata.album = tags.album;
+          }
+          if(LanguageUtils.isFunction(callback)){
+            callback(err, metadata);
+          }
         }
-        if (tags.title !== null) {
-          metadata.title = tags.title;
-        }
-        if (tags.album !== null) {
-          metadata.album = tags.album;
-        }
-        if(LanguageUtils.isFunction(callback)){
-          callback(err, metadata);
+        catch(err){
+          callback(err);
         }
       });
     }
