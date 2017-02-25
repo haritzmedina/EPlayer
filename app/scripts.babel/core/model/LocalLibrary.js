@@ -73,14 +73,9 @@ class LocalLibrary extends Library{
     // TODO Dispatch event with the progression of reading files
     let songId = this.id+'#'+file;
     return ()=>{
-      SongFile.readSongFileMetadata(file, (error, songMetadata)=>{
-        if(error){
-          Logger.log(error);
-        }
-        else{
-          console.log('Readed '+file);
-          songsArray.unshift(new SongFile(songId, file, songMetadata));
-        }
+      SongFile.readSongFileMetadata(file, (songMetadata)=>{
+        console.log('Readed '+file);
+        songsArray.unshift(new SongFile(songId, file, songMetadata));
         if(LanguageUtils.isFunction(callback)){
           callback();
         }

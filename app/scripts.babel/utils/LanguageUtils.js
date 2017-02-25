@@ -30,6 +30,10 @@ class LanguageUtils {
     return obj instanceof classReference;
   }
 
+  static isString(obj){
+    return typeof obj === 'string';
+  }
+
   static fillObject(object, properties){
     return Object.assign(object, properties);
   }
@@ -44,6 +48,15 @@ class LanguageUtils {
       bubbles: true,
       cancelable: true
     }));
+  }
+
+  static valueOrEmpty(value, condition){
+    if(condition){
+      return value;
+    }
+    else{
+      return '';
+    }
   }
 }
 

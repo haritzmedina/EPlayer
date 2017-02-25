@@ -8,8 +8,9 @@
   "main": "app/main.js",
   "dependencies": {
     "electron": "latest",
+    "file-url": "^2.0.2",
     "fs": "latest",
-    "id3js": "git://github.com/haritzmedina/id3.git",
+    "id3-parser": "^1.2.0",
     "jquery": "latest",
     "uuid": "latest"
   },
@@ -18,6 +19,7 @@
     "del": "^2.2.0",
     "electron": "latest",
     "electron-connect": "^0.6.1",
+    "electron-debug": "^1.1.0",
     "electron-packager": "^8.5.1",
     "gulp": "^3.9.1",
     "gulp-eslint": "^2.0.0",

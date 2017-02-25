@@ -1,5 +1,8 @@
 const {app, BrowserWindow} = require('electron');
 
+require('electron-debug')({showDevTools: true});
+
+
 let mainWindow;
 
 // Quit when all windows are closed.
@@ -11,7 +14,7 @@ app.on('window-all-closed', function() {
 
 app.on('ready', function() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 1024, height: 800});
+  mainWindow = new BrowserWindow({width: 1700, height: 1100});
 
   // and load the index.html of the app.
   mainWindow.loadURL('file://' + __dirname + '/window.html');
