@@ -15,9 +15,9 @@ class StorageNamespaces{
 }
 
 StorageNamespaces.library = {
-  container: 'GCPlayer.library.container',
-  playlists: 'GCPlayer.library.playlist',
-  songs: 'GCPlayer.library.songs'
+  container: 'EPlayer.library.container',
+  playlists: 'EPlayer.library.playlist',
+  songs: 'EPlayer.library.songs'
 };
 
 module.exports = StorageNamespaces;

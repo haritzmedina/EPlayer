@@ -28,8 +28,8 @@ class PlaylistContainer {
   changeCurrentPlaylist(playlist, isPlayable){
     this.currentPlaylist = playlist;
     if(isPlayable){
-      window.GCPlayer.player.setPlaylist(this.currentPlaylist);
-      window.GCPlayer.player.play();
+      window.EPlayer.player.setPlaylist(this.currentPlaylist);
+      window.EPlayer.player.play();
     }
   }
 

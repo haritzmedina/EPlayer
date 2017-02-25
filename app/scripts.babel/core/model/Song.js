@@ -30,11 +30,11 @@ class Song{
     titleDiv.innerText = this.title;
     let playButton = content.querySelector('.librarySongPlayButton');
     playButton.addEventListener('click', (event)=>{
-      window.GCPlayer.playlistContainer.changeCurrentPlaylist(new Playlist('temp', [this]), true);
+      window.EPlayer.playlistContainer.changeCurrentPlaylist(new Playlist('temp', [this]), true);
     });
     let addPlaylistButton = content.querySelector('.librarySongAddPlaylist');
     addPlaylistButton.addEventListener('click', (event)=>{
-      window.GCPlayer.playlistContainer.currentPlaylist.addSong(this);
+      window.EPlayer.playlistContainer.currentPlaylist.addSong(this);
     });
     container.appendChild(content);
   }

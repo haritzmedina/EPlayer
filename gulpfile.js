@@ -1,4 +1,5 @@
 const gulp = require('gulp');
+const rename = require('gulp-rename');
 const del = require('del');
 const runSequence = require('run-sequence');
 const source = require('vinyl-source-stream');
@@ -15,14 +16,16 @@ const packager = require('electron-packager');
 
 gulp.task('electron', ()=>{
   "use strict";
-  // Start browser process
-  electron.start((electronProcState) => {
-    if (electronProcState == 'stopped') {
-      process.exit(); // Close the process if window is closed
-    }
+  runSequence('lint', 'browserify', ()=>{
+    // Start browser process
+    electron.start((electronProcState) => {
+      if (electronProcState == 'stopped') {
+        process.exit(); // Close the process if window is closed
+      }
+    });
+    // Reload renderer process
+    gulp.watch('app/scripts.babel/**/*.js', ['lint', 'browserify', electron.reload]);
   });
-  // Reload renderer process
-  gulp.watch('app/scripts.babel/**/*.js', ['lint', 'browserify', electron.reload]);
 });
 
 gulp.task('doc', function (cb) {
@@ -68,13 +71,39 @@ gulp.task('build', (cb) => {
   runSequence('lint', 'size', cb);
 });
 
+gulp.task('dist', (cb)=>{
+  "use strict";
+  runSequence('build', ()=>{
+    // Copy production files to dist
+    gulp.src([
+      'app/window.html',
+      'app/_locales/*',
+      'app/css/*',
+      'app/images/*',
+      'app/scripts/*',
+      'app/icon.ico',
+      'app/package.json'
+      ],
+      {base: './app/'})
+      .pipe(gulp.dest('dist'));
+    // Rename main.js file
+    gulp.src('app/main-dist.js')
+      .pipe(rename('main.js'))
+      .pipe(gulp.dest('dist'));
+    return cb;
+  });
+});
+
 gulp.task('package', (cb)=>{
-  packager({
-    dir: './app',
-    icon: './app/icon.ico',
-    overwrite: true,
-    out: './package'
-  }, function done_callback (err, appPaths) {});
+  runSequence('dist', ()=>{
+    "use strict";
+    packager({
+      dir: './dist',
+      icon: './dist/icon.ico',
+      overwrite: true,
+      out: './package'
+    }, function done_callback (err, appPaths) {});
+  });
 });
 
 gulp.task('default', ['clean'], cb => {

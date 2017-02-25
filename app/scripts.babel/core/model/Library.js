@@ -46,7 +46,7 @@ class Library{
 
     let removeButton = libraryWrapper.querySelector('.libraryRemove');
     removeButton.addEventListener('click', ()=>{
-      window.GCPlayer.libraryContainer.removeLibrary({id: this.id}, ()=>{
+      window.EPlayer.libraryContainer.removeLibrary({id: this.id}, ()=>{
         Notification.createTextNotification(
           Notification.predefinedId.other,
           'Library removed',
@@ -57,7 +57,7 @@ class Library{
 
     let playButton = libraryWrapper.querySelector('.libraryPlay');
     playButton.addEventListener('click', ()=>{
-      window.GCPlayer.playlistContainer.changeCurrentPlaylist(new Playlist('temp', this.songs), true);
+      window.EPlayer.playlistContainer.changeCurrentPlaylist(new Playlist('temp', this.songs), true);
       // TODO Notify user that new playlist is loaded
     });
 

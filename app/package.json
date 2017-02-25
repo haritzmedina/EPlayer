@@ -1,6 +1,6 @@
 {
-  "name": "gcplayer",
-  "productName": "GCplayer",
+  "name": "eplayer",
+  "productName": "Eplayer",
   "version": "0.0.1",
   "main": "main.js",
   "devDependencies": {

@@ -10,12 +10,12 @@ const Logger = require('../io/Logger');
 const {globalShortcut} = window.require('electron').remote;
 
 /**
- * The main file of GCPlayer
+ * The main file of EPlayer
  * @author Haritz Medina <me@haritzmedina.com>
  */
-class GCPlayer{
+class EPlayer{
   /**
-   * The constructor of GCPlayer
+   * The constructor of EPlayer
    */
   constructor(){
     this.extensionsRunner = new ExtensionsRunner();
@@ -27,11 +27,11 @@ class GCPlayer{
   }
 
   /**
-   * Initialization of GCPlayer components
+   * Initialization of EPlayer components
    */
   init(){
-    // Add global reference to GCPlayer
-    window.GCPlayer = this;
+    // Add global reference to EPlayer
+    window.EPlayer = this;
 
     // Load core components
     this.loadCoreComponents();
@@ -122,4 +122,4 @@ class GCPlayer{
   }
 }
 
-module.exports = GCPlayer;
+module.exports = EPlayer;

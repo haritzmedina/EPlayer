@@ -1,8 +1,7 @@
 (function(){
-  let GoogleChromePlayer = require('./core/GCPlayer');
+  let EPlayer = require('./core/EPlayer');
     window.onload = function(){
-      //window.GCPlayer.controller.init();
-      new GoogleChromePlayer();
+      new EPlayer();
     };
 })();
 

@@ -29,7 +29,7 @@ class LibraryContainer{
     // Load local saved libraries data from local storage
     (new Promise((resolve, reject) => {
       LocalStorage.init();
-      LocalStorage.getData('GCPlayer.library.container', (error, result)=> {
+      LocalStorage.getData(StorageNamespaces.library.container, (error, result)=> {
         if(error){
           Logger.log(error);
         }
