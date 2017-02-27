@@ -1,0 +1,119 @@
+/* Player */
+#player{
+  display: none;
+}
+
+.playerControl > img{
+  width: 6em;
+}
+
+.playerControl[data-description]:hover:after {
+  content: attr(data-description);
+  padding: 4px 8px;
+  color: rgba(0,0,0,0.5);
+  position: absolute;
+  left: 0;
+  top: 100%;
+  white-space: nowrap;
+  z-index: 2;
+  border-radius: 5px ;
+  background: rgba(0,0,0,0.5);
+}
+
+#playerProgressBar{
+  width: 100%;
+  position: absolute;
+  left:0;
+  bottom: 0;
+  margin-bottom: 0.5em;
+  height: 0.75em;
+  background-color: rgba(255,255,255,1);
+  cursor: pointer;
+}
+
+#playerProgressBar:hover{
+  height: 1.5em;
+}
+
+#playerWrapper progress::-webkit-progress-bar{
+  background-color : rgba(50,50,50,0.5);
+}
+
+#playerWrapper progress::-webkit-progress-value{
+  background-color: rgba(0,100,200,0.8);
+}
+
+
+#previous img{
+  width: 6em;
+  height: 6em;
+  -webkit-mask-size: 6em;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-image:url('../images/previous.svg');
+}
+
+#previous[data-activated='false'] img{
+  background-color: grey;
+}
+
+#previous[data-activated='true'] img{
+  background-color: white;
+}
+
+#next img{
+  width: 6em;
+  height: 6em;
+  -webkit-mask-size: 6em;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-image:url('../images/next.svg');
+}
+
+#next[data-activated='false'] img{
+  background-color: grey;
+}
+
+#next[data-activated='true'] img{
+  background-color: white;
+}
+
+#repeatRandom img{
+  width: 6em;
+  height: 6em;
+  -webkit-mask-size: 6em;
+}
+
+#repeatRandom[data-status='0'] img{
+  background-color: white;
+  -webkit-mask-image:url('../images/repeat.svg');
+}
+
+#repeatRandom[data-status='1'] img{
+  -webkit-mask-image:url('../images/repeat.svg');
+  background-color: rgba(0,100,200,0.8);
+}
+
+#repeatRandom[data-status='2'] img{
+  -webkit-mask-image:url('../images/shuffle.svg');
+  background-color: rgba(0,100,200,0.8);
+}
+
+#playPause img{
+  width: 6em;
+  height: 6em;
+  -webkit-mask-size: 6em;
+}
+
+#playPause[data-status='playing'] img{
+  -webkit-mask-image:url('../images/pause.svg');
+  background-color: white;
+}
+
+#playPause[data-status='stopped'] img{
+  -webkit-mask-image:url('../images/play.svg');
+  background-color: grey;
+}
+
+#playPause[data-status='paused'] img{
+  -webkit-mask-image:url('../images/play.svg');
+  background-color: white;
+}

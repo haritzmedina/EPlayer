@@ -11,7 +11,7 @@ let LanguageUtils = require('../../utils/LanguageUtils');
 class Playlist{
 
   constructor(name, songs){
-    this.currentSong = {};
+    this.currentSongIndex = null;
     // TODO Check if isEmptyObject or isEmptyArray required
     if(LanguageUtils.isEmptyObject(songs)){
       this.songs = [];
@@ -20,80 +20,64 @@ class Playlist{
       this.songs = songs;
     }
     this.name = name;
-    this.repeat = true;
     this.id = uuid();
-    this.shuffle = false;
-    this.playingSongs = [];
+  }
+
+  getCurrentSong(){
+    if(LanguageUtils.isEmptyObject(this.songs)){
+      return null;
+    }
+    else{
+      return this.songs[this.currentSongIndex];
+    }
+  }
+
+  firstSong(){
+    if(LanguageUtils.isEmptyObject(songs)){
+      return this.songs[0];
+    }
+    else{
+      return null;
+    }
+  }
+
+  lastSong(){
+    if(LanguageUtils.isEmptyObject(songs)){
+      return this.songs[this.songs.length-1];
+    }
+    else{
+      return null;
+    }
+  }
+
+  existsNextSong(){
+    return this.currentSongIndex < this.songs.length-1;
+  }
+
+  existsPreviousSong(){
+    return this.currentSongIndex > 0;
+  }
+
+  nextSong(){
+    this.currentSongIndex+=1;
+  }
+
+  previousSong(){
+    this.currentSongIndex-=1;
+  }
+
+  randomSong(){
+    this.currentSongIndex = DataUtils.getRandomInt(this.songs.length);
+  }
+
+  setSong(index){
+    if(index>=0 && index<this.songs.length){
+      this.currentSongIndex = index;
+    }
   }
 
   start(){
-    if(this.songs.length===0){
-      this.currentSong = null;
-    }
-    else{
-      if(this.shuffle){
-        // Randomize playlist
-        this.playingSongs = DataUtils.shuffle(this.songs);
-      }
-      else{
-        // Ordered songs
-        this.playingSongs = this.songs.slice();
-      }
-      // Set current song
-      this.currentSong = this.playingSongs[0];
-    }
-  }
-
-  activateShuffle(){
-    this.shuffle = true;
-  }
-
-  deactivateShuffle(){
-    this.shuffle = false;
-  }
-
-  getNextSong(){
-    if(this.playingSongs.length-1 <= this.getCurrentSongIndex()){
-      if(this.repeat){
-        return this.playingSongs[0];
-      }
-      else{
-        return null;
-      }
-    }
-    else{
-      return this.playingSongs[this.getCurrentSongIndex()+1];
-    }
-  }
-
-  setCurrentNextSong(){
-    this.currentSong = this.getNextSong();
-  }
-
-  setCurrentPreviousSong(){
-    this.currentSong = this.getPreviousSong();
-  }
-
-  setCurrentRandomSong(){
-    this.currentSong = DataUtils.getRandomElement(this.playingSongs);
-  }
-
-  getCurrentSongIndex(){
-    return DataUtils.queryIndexByExample(this.playingSongs, {id: this.currentSong.id});
-  }
-
-  getPreviousSong(){
-    if(this.getCurrentSongIndex()===0){
-      if(this.repeat){
-        return this.playingSongs[this.playingSongs.length-1];
-      }
-      else{
-        return null;
-      }
-    }
-    else{
-      return this.playingSongs[this.getCurrentSongIndex()-1];
-    }
+    this.currentSongIndex = 0;
   }
 
   addSong(song){
@@ -105,8 +89,6 @@ class Playlist{
     }
     else{
       this.songs.push(song);
-      this.playingSongs.push(song);
-
     }
   }
 

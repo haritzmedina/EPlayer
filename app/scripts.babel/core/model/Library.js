@@ -57,7 +57,7 @@ class Library{
 
     let playButton = libraryWrapper.querySelector('.libraryPlay');
     playButton.addEventListener('click', ()=>{
-      window.EPlayer.playlistContainer.changeCurrentPlaylist(new Playlist('temp', this.songs), true);
+      window.EPlayer.player.changeCurrentPlaylist(new Playlist('temp', this.songs));
       // TODO Notify user that new playlist is loaded
     });
 

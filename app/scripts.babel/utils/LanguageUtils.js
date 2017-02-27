@@ -58,6 +58,15 @@ class LanguageUtils {
       return '';
     }
   }
+
+  static switchCases(cases, defaultCase, key){
+    if (key in cases) {
+      return cases[key];
+    }
+    else {
+      return defaultCase;
+    }
+  }
 }
 
 module.exports = LanguageUtils;

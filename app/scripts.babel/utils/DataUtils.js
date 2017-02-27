@@ -8,8 +8,8 @@ const LanguageUtils = require('./LanguageUtils');
 class DataUtils{
 
   static shuffle(originalArray){
-    var array = originalArray.slice();
-    var currentIndex = array.length, temporaryValue, randomIndex;
+    let array = originalArray.slice();
+    let currentIndex = array.length, temporaryValue, randomIndex;
 
     // While there remain elements to shuffle...
     while (0 !== currentIndex) {
@@ -30,6 +30,15 @@ class DataUtils{
 
   static getRandomElement(array){
     return array[Math.floor(Math.random() * array.length)];
+  }
+
+  static getRandomInt(maxNumber){
+    if(maxNumber){
+      return Math.floor(Math.random() * maxNumber);
+    }
+    else{
+      throw 'Max number is required!';
+    }
   }
 
   static removeByExample(array, props){

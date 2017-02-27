@@ -1,0 +1,52 @@
+/* Lateral menu */
+
+.menuElement{
+  float: none;
+  width: 4.5em;
+  display:block;
+  height: 4.5em;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0.25em 0.25em 0.5em;
+}
+
+.menuElement:hover{
+  border-radius: 5px;
+}
+
+#librarySelector{
+  background: rgba(200, 49, 107, 1) url(../images/library.png);
+  background-size: 4.5em 4.5em;
+}
+
+#librarySelector:hover{
+  background-color: rgba(200, 11, 81, 1);
+}
+
+
+#playlistSelector{
+  background: rgba(50, 125, 200, 1) url(../images/playlist.png);
+  background-size: 4.5em 4.5em;
+}
+
+#playlistSelector:hover{
+  background-color: rgba(40, 78, 200, 1);
+}
+
+#settingsSelector{
+  background: rgba(160, 160, 40, 1) url(../images/settings.png);
+  background-size: 4.5em 4.5em;
+}
+
+#settingsSelector:hover{
+  background-color: rgba(120, 120, 20, 1);
+}
+
+#expandSelector{
+  background: rgba(0, 0, 0, 1) url(../images/expand.png);
+  background-size: 4.5em 4.5em;
+}
+
+#expandSelector:hover{
+  background-color: rgba(0, 0, 0, 1);
+}
