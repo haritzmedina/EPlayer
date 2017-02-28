@@ -202,7 +202,7 @@ class LibraryContainer{
     return DataUtils.queryByExample(this.libraries, {id: libraryId})[0];
   }
 
-  searchSongById(songId){
+  getSongById(songId){
     let library = this.getLibraryBySongId(songId);
     if(library){
       return library.getSongById(songId);

@@ -47,21 +47,39 @@ class Player{
     LocalStorage.init();
     LocalStorage.getData(StorageNamespaces.player, (error, result)=> {
       if(result){
-        // Load playlist as an instance of playlist
-        this.playlist = LanguageUtils.fillObject(new Playlist(), result.playlist);
-        // Load repeat random config
-        this.repeatRandom = result.repeatRandom;
-        // Load session played history
-        this.sessionPlayingHistory = result.sessionPlayingHistory;
         // Load current status
         this.currentStatus = result.currentStatus;
-        // Load last song
-        this.lastSong = result.lastSong;
+        // Load repeat random config
+        this.repeatRandom = result.repeatRandom;
+
+        // Load playlist as an instance of playlist
+        this.playlist = LanguageUtils.fillObject(new Playlist(), result.playlist);
+        let playlistChanged = this.playlist.checkPlaylistSongsAvailability();
+        // Playlist is not available in the same way as it was saved
+        if(playlistChanged){
+          // If there is not any available song, remove the playlist
+          if(this.playlist.isEmpty()){
+            this.playlist = null;
+          }
+          this.changeStatus(this.status.stopped);
+          // Clean history reproduced in the last session
+          this.sessionPlayingHistory = [];
+          this.lastSong = null;
+        }
+        else{
+          // Load session played history
+          this.sessionPlayingHistory = result.sessionPlayingHistory;
+          // Load last song
+          this.lastSong = result.lastSong;
+          // Load playing song source in last session
+          if(this.currentStatus===this.status.paused){
+            debugger;
+            this.loadCurrentSongSource(()=>{});
+          }
+        }
         // Render playlist interface
         this.renderPlayerControls();
-        if(this.currentStatus===this.status.paused){
-          this.loadCurrentSongSource(()=>{});
-        }
+        this.renderPlayerMetadata();
       }
     });
     this.initPanelHandlers();
@@ -225,6 +243,8 @@ class Player{
     this.playlist = null;
     this.playerInstance.src = null;
     this.playerInstance.pause();
+    this.sessionPlayingHistory = [];
+    this.lastSong = null;
     this.changeStatus(this.status.stopped);
   }
 
@@ -244,6 +264,7 @@ class Player{
   }
 
   nextSong(){
+    debugger;
     if(this.repeatRandom===2){
       this.playlist.randomSong();
     }
@@ -253,7 +274,7 @@ class Player{
           this.playlist.nextSong();
         }
         else{
-          this.playlist.firstSong();
+          this.playlist.setSong(0);
         }
       }
       else{
@@ -286,7 +307,7 @@ class Player{
       this.play();
     }
     else if(this.playlist.existsPreviousSong()){
-      this.playlist.previousSong();
+      this.playlist.setSong(this.playlist.songs.length-1);
       // Stop current song
       this.changeStatus(this.status.stopped);
       // Play changed song
@@ -296,10 +317,10 @@ class Player{
 
   renderPlayerControls(){
     // Check previous button status
-    this.previousButton.dataset.activated = this.playlist.existsPreviousSong() || this.sessionPlayingHistory.length>0;
+    this.previousButton.dataset.activated = !!this.playlist && (this.playlist.existsPreviousSong() || this.sessionPlayingHistory.length>0);
     // Check next button status
-    this.nextButton.dataset.activated = this.playlist.existsNextSong() ||
-      (this.repeatRandom === 2 && LanguageUtils.isInstanceOf(this.playlist, Playlist));
+    this.nextButton.dataset.activated = !!this.playlist && (this.playlist.existsNextSong() ||
+      (this.repeatRandom !== 0 && LanguageUtils.isInstanceOf(this.playlist, Playlist)));
     // Check playPause button status
     this.playPauseButton.dataset.status = this.currentStatus;
     // Check random/repeat button status
@@ -357,10 +378,14 @@ class Player{
   }
 
   renderPlayerMetadata() {
-    let currentSong = this.playlist.getCurrentSong();
-    this.songInfoWrapper.querySelector('#album').innerText = currentSong.album;
-    this.songInfoWrapper.querySelector('#artist').innerText = currentSong.artist;
-    this.songInfoWrapper.querySelector('#title').innerText = currentSong.title;
+    if(this.playlist){
+      let currentSong = this.playlist.getCurrentSong();
+      if(currentSong){
+        this.songInfoWrapper.querySelector('#album').innerText = currentSong.album;
+        this.songInfoWrapper.querySelector('#artist').innerText = currentSong.artist;
+        this.songInfoWrapper.querySelector('#title').innerText = currentSong.title;
+      }
+    }
   }
 }
 

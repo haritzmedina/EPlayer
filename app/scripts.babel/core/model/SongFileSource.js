@@ -13,7 +13,9 @@ class SongFileSource extends SongSource{
 
   constructor(filepath){
     super();
-    this.filepath = filepath;
+    // Replace special chars: #
+    this.filepath = filepath
+      .replace('#', '%23');
   }
 
   retrievePlayableSource(callback){

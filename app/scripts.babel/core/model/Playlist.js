@@ -34,14 +34,13 @@ class Playlist{
 
   getCurrentSong(){
     let currentSongId = this.getCurrentSongId();
-    console.log(currentSongId);
     if(currentSongId){
-      return window.EPlayer.libraryContainer.searchSongById(currentSongId);
+      return window.EPlayer.libraryContainer.getSongById(currentSongId);
     }
   }
 
   firstSong(){
-    if(LanguageUtils.isEmptyObject(songs)){
+    if(LanguageUtils.isEmptyObject(this.songs)){
       return this.songs[0];
     }
     else{
@@ -50,7 +49,7 @@ class Playlist{
   }
 
   lastSong(){
-    if(LanguageUtils.isEmptyObject(songs)){
+    if(LanguageUtils.isEmptyObject(this.songs)){
       return this.songs[this.songs.length-1];
     }
     else{
@@ -89,14 +88,17 @@ class Playlist{
   }
 
   addSong(songId){
-    // TODO Revise if it is good idea to avoid duplicated songs
-    // If song is already in the playlist
-    if(DataUtils.queryByExample(this.songs, songId).length>0){
-      // TODO send message to user
-      Logger.log('Song already added');
-    }
-    else{
-      this.songs.push(songId);
+    // Check if song is in libraries
+    if(window.EPlayer.libraryContainer.getSongById(songId)){
+      // TODO Revise if it is good idea to avoid duplicated songs
+      // If song is already in the playlist
+      if(DataUtils.queryByExample(this.songs, songId).length>0){
+        // TODO send message to user
+        Logger.log('Song already added');
+      }
+      else{
+        this.songs.push(songId);
+      }
     }
   }
 
@@ -107,6 +109,18 @@ class Playlist{
 
   isEmpty(){
     return this.songs.length===0;
+  }
+
+  checkPlaylistSongsAvailability(){
+    let availableSongs = [];
+    for(let i=0;i<this.songs.length;i++){
+      if(window.EPlayer.libraryContainer.getSongById(this.songs[i])){
+        availableSongs.push(this.songs[i]);
+      }
+    }
+    let songsChanged = this.songs.length !== availableSongs.length;
+    this.songs = availableSongs;
+    return songsChanged;
   }
 
   printPlaylist(){

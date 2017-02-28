@@ -34,7 +34,7 @@ class Song{
     });
     let addPlaylistButton = content.querySelector('.librarySongAddPlaylist');
     addPlaylistButton.addEventListener('click', (event)=>{
-      window.EPlayer.player.addSong(this);
+      window.EPlayer.player.addSong(this.id);
     });
     container.appendChild(content);
   }
