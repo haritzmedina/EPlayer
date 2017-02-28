@@ -9,6 +9,7 @@
 
 #librarySearchWrapper{
   height: 5em;
+  padding-left: 25%;
   float:left;
 }
 
@@ -103,6 +104,7 @@
 
 .librarySongElement:hover{
   background-color: rgba(255, 255, 255, 0.2);
+  -webkit-transition: background-color 500ms ease-out;
 }
 
 .librarySongText{

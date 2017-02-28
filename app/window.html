@@ -36,7 +36,7 @@
     </div>
     <template id="librarySongElement">
       <div class="librarySongElement">
-        <span class="librarySongControl librarySongPlayButton" title="Play"></span>
+        <span class="clickableButtonImage librarySongControl librarySongPlayButton" title="Play"></span>
         <span class="librarySongControl librarySongAddPlaylist" title="Add playlist"></span>
         <span class="librarySongText librarySongElementArtist"></span>
         <span class="librarySongText librarySongElementTitle"></span>
@@ -47,7 +47,7 @@
       <div class="libraryTopWrapper">
         <div class="libraryTitleWrapper"></div>
         <div class="libraryOptions">
-          <div class="libraryPlay"></div>
+          <div class="libraryPlay clickableButtonImage"></div>
           <div class="libraryRemove"></div>
         </div>
       </div>
@@ -90,19 +90,19 @@
 </div>
 <div id="playerWrapper">
   <progress id="playerProgressBar"></progress>
+  <span id="playerTimeValue"></span><span id="playerTimeMax"></span>
+  <div id="playingSongInfo">
+    <span id="title" class="playingSongMetadata"></span>
+    <span id="artist" class="playingSongMetadata"></span>
+    <span id="album" class="playingSongMetadata"></span>
+    <span id="cover"></span>
+  </div>
   <div id="playerControls">
     <a class="playerControl" id="previous" data-activated="false"><img src=""></a>
     <a class="playerControl" id="playPause" data-status="stopped" data-description="play pause"><img src=""></a>
     <a class="playerControl" id="next" data-activated="false"><img src=""></a>
     <a class="playerControl" id="repeatRandom" data-activated="false" data-status="0"><img src="" title=""></a>
-    <span id="playerTimeValue"></span><span id="playerTimeMax"></span>
   </div>
-  <span id="playingSongInfo">
-    <span id="album"></span>
-    <span id="artist"></span>
-    <span id="title"></span>
-    <span id="cover"></span>
-  </span>
 </div>
 <audio id="player" controls="controls"></audio>
 </body>
