@@ -78,10 +78,6 @@ class FileManager{
       fs.mkdirSync(dir);
     }
   }
-
-  static getFileFromFilePath(filepath){
-    debugger;
-  }
 }
 
 module.exports = FileManager;

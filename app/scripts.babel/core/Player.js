@@ -73,7 +73,6 @@ class Player{
           this.lastSong = result.lastSong;
           // Load playing song source in last session
           if(this.currentStatus===this.status.paused){
-            debugger;
             this.loadCurrentSongSource(()=>{});
           }
         }
@@ -264,7 +263,6 @@ class Player{
   }
 
   nextSong(){
-    debugger;
     if(this.repeatRandom===2){
       this.playlist.randomSong();
     }
