@@ -30,7 +30,7 @@ class Song{
     titleDiv.innerText = this.title;
     let playButton = content.querySelector('.librarySongPlayButton');
     playButton.addEventListener('click', (event)=>{
-      window.EPlayer.player.changeCurrentPlaylist(new Playlist('temp', [this]));
+      window.EPlayer.player.changeCurrentPlaylist(new Playlist('temp', [this.id]));
     });
     let addPlaylistButton = content.querySelector('.librarySongAddPlaylist');
     addPlaylistButton.addEventListener('click', (event)=>{

@@ -7,7 +7,7 @@
   width: 6em;
 }
 
-.playerControl[data-description]:hover:after {
+/*.playerControl[data-description]:hover:after {
   content: attr(data-description);
   padding: 4px 8px;
   color: rgba(0,0,0,0.5);
@@ -19,6 +19,7 @@
   border-radius: 5px ;
   background: rgba(0,0,0,0.5);
 }
+*/
 
 #playerProgressBar{
   width: 100%;

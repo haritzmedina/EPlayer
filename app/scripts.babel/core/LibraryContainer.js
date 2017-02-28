@@ -131,6 +131,10 @@ class LibraryContainer{
     });
   }
 
+  onClose(callback){
+    this.updateLocalStorage(callback);
+  }
+
   removeLibrary(library, callback){
     // Remove library from local or sync (depending on where it is
     DataUtils.removeByExample(this.libraries, library);
@@ -192,11 +196,24 @@ class LibraryContainer{
     }
   }
 
+  getLibraryBySongId(songId){
+    let splitId = songId.split('?');
+    let libraryId = splitId[0];
+    return DataUtils.queryByExample(this.libraries, {id: libraryId})[0];
+  }
+
+  searchSongById(songId){
+    let library = this.getLibraryBySongId(songId);
+    if(library){
+      return library.getSongById(songId);
+    }
+    return null;
+  }
+
 
   printSearchedSongs(songs){
     let container = document.getElementById('librarySearchResults');
     container.innerText = '';
-
     for(let i=0;i<songs.length;i++){
       songs[i].printLibrarySong(container);
     }

@@ -57,7 +57,9 @@ class Library{
 
     let playButton = libraryWrapper.querySelector('.libraryPlay');
     playButton.addEventListener('click', ()=>{
-      window.EPlayer.player.changeCurrentPlaylist(new Playlist('temp', this.songs));
+      let songsId = [];
+      this.songs.forEach((song)=>{songsId.push(song.id)});
+      window.EPlayer.player.changeCurrentPlaylist(new Playlist('temp', songsId));
       // TODO Notify user that new playlist is loaded
     });
 
@@ -85,6 +87,10 @@ class Library{
       album: textFilter,
       title: textFilter
     }, DataUtils.stringInclude);
+  }
+
+  getSongById(songId){
+    return DataUtils.queryByExample(this.songs, {id: songId})[0];
   }
 
 }

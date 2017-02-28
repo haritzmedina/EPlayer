@@ -49,7 +49,7 @@ class FileManager{
   }
 
   static getUserStorageFolderPath(){
-    return FileManager.getAppDataFolderPath()+'/GCPlayer/';
+    return FileManager.getAppDataFolderPath()+'/EPlayer/';
   }
 
   static readJSONFile(filepath){

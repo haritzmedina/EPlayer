@@ -58,13 +58,13 @@ class EPlayer{
 
           });
         }
+
+        // Load player
+        this.player.init();
       });
     });
 
     // Load playlists
-
-    // Load player
-    this.player.initPanelHandlers();
     
     // Load interface
     this.menu.init();
@@ -76,7 +76,8 @@ class EPlayer{
   loadCloseEvents() {
     window.onbeforeunload = ()=>{
       // Update library container chrome storage
-      this.libraryContainer.updateLocalStorage();
+      this.libraryContainer.onClose();
+      this.player.onClose();
     };
   }
 

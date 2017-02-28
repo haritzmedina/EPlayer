@@ -20,4 +20,6 @@ StorageNamespaces.library = {
   songs: 'EPlayer.library.songs'
 };
 
+StorageNamespaces.player = 'EPlayer.player';
+
 module.exports = StorageNamespaces;

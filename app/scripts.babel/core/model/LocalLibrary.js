@@ -29,7 +29,7 @@ class LocalLibrary extends Library{
       let readFileCallbacks = [];
       for(let i=0;i<files.length;i++){
         let file = files[i];
-        let songId = this.id+'#'+file;
+        let songId = this.id+'?'+file;
         // TODO Check if song is already added (and not changed)
         let filteredSavedSongs = DataUtils.queryByExample(this.songs, {id: songId});
         let savedSong = {};
@@ -71,7 +71,7 @@ class LocalLibrary extends Library{
 
   retrieveReadLocalFileHandler(file, songsArray, callback){
     // TODO Dispatch event with the progression of reading files
-    let songId = this.id+'#'+file;
+    let songId = this.id+'?'+file;
     return ()=>{
       SongFile.readSongFileMetadata(file, (songMetadata)=>{
         console.log('Readed '+file);

@@ -4,6 +4,8 @@ const LanguageUtils = require('./../utils/LanguageUtils');
 const TimeUtils = require('./../utils/TimeUtils');
 const Notification = require('./../io/Notification');
 const Logger = require('./../io/Logger');
+const LocalStorage = require('./../io/LocalStorage');
+const StorageNamespaces = require('./../io/StorageNamespaces');
 const Playlist = require('./model/Playlist');
 
 /**
@@ -40,6 +42,46 @@ class Player{
     this.songInfoWrapper = document.querySelector('#playingSongInfo');
   }
 
+  init(){
+    // Load configuration of player options from storage
+    LocalStorage.init();
+    LocalStorage.getData(StorageNamespaces.player, (error, result)=> {
+      if(result){
+        // Load playlist as an instance of playlist
+        this.playlist = LanguageUtils.fillObject(new Playlist(), result.playlist);
+        // Load repeat random config
+        this.repeatRandom = result.repeatRandom;
+        // Load session played history
+        this.sessionPlayingHistory = result.sessionPlayingHistory;
+        // Load current status
+        this.currentStatus = result.currentStatus;
+        // Load last song
+        this.lastSong = result.lastSong;
+        // Render playlist interface
+        this.renderPlayerControls();
+        if(this.currentStatus===this.status.paused){
+          this.loadCurrentSongSource(()=>{});
+        }
+      }
+    });
+    this.initPanelHandlers();
+  }
+
+  onClose(callback){
+    if(this.currentStatus===this.status.playing){
+      this.currentStatus = this.status.paused;
+    }
+    this.updateLocalStorage(callback);
+  }
+
+  updateLocalStorage(callback){
+    LocalStorage.setData(StorageNamespaces.player, this, ()=>{
+      if(LanguageUtils.isFunction(callback)){
+        callback();
+      }
+    });
+  }
+
   definePlayerEvents(){
     // Player events
     this.events = {
@@ -47,7 +89,7 @@ class Player{
         name: 'songChanged',
         event: ()=>{
           return LanguageUtils.createCustomEvent(
-            this.events.songChanged.name, this.playlist.currentSongIndex);
+            this.events.songChanged.name, this.playlist.getCurrentSongId());
         }
       },
       playing: {name: 'playing'},
@@ -59,7 +101,6 @@ class Player{
   initPanelHandlers() {
     // Panel buttons
     this.previousButton.addEventListener('click', (event) => {
-      debugger;
       if(this.previousButton.dataset.activated){
         this.previousSong();
       }
@@ -82,13 +123,7 @@ class Player{
     });
     // Progressbar click event
     this.progressBar.addEventListener('click', (event)=>{
-      // TODO When progress bar is bigger not the whole bar is touchable (Y coord)
       // Get value on progress bar
-      console.log(event.target.offsetTop);
-      console.log({
-        offsets: [event.target.offsetTop, event.target.offsetLeft, event.target.offsetWidth],
-        events: [event.pageX, event.pageY]
-      });
       let x = event.pageX - event.target.offsetLeft,
         y = event.pageY - event.target.offsetTop,
         clickedValue = x * event.target.max / event.target.offsetWidth;
@@ -123,9 +158,7 @@ class Player{
       // Set progressbar max time
       this.progressBar.max = Math.floor(this.playerInstance.duration);
       // Set song metadata
-      this.songInfoWrapper.querySelector('#album').innerText = this.playlist.getCurrentSong().album;
-      this.songInfoWrapper.querySelector('#artist').innerText = this.playlist.getCurrentSong().artist;
-      this.songInfoWrapper.querySelector('#title').innerText = this.playlist.getCurrentSong().title;
+      this.renderPlayerMetadata();
       // Render player controls
       this.renderPlayerControls();
     });
@@ -229,10 +262,13 @@ class Player{
     }
     // Stop current song
     this.changeStatus(this.status.stopped);
-    debugger;
     if(this.playlist.currentSongIndex!==null){
       // Add previous song to the history
       if(this.lastSong!==null){
+        // If history is larger than 100, remove the oldest one
+        if(this.sessionPlayingHistory.length>100){
+          this.sessionPlayingHistory.shift();
+        }
         this.sessionPlayingHistory.push(this.lastSong);
       }
       this.lastSong = this.playlist.currentSongIndex;
@@ -266,6 +302,8 @@ class Player{
       (this.repeatRandom === 2 && LanguageUtils.isInstanceOf(this.playlist, Playlist));
     // Check playPause button status
     this.playPauseButton.dataset.status = this.currentStatus;
+    // Check random/repeat button status
+    this.repeatRandomButton.dataset.status = this.repeatRandom;
   }
 
   moveForward(seconds){
@@ -301,7 +339,7 @@ class Player{
     else{
       this.repeatRandom+=1;
     }
-    this.repeatRandomButton.dataset.status = this.repeatRandom;
+    this.renderPlayerControls();
   }
 
   addSong(song){
@@ -318,7 +356,12 @@ class Player{
     this.renderPlayerControls();
   }
 
-
+  renderPlayerMetadata() {
+    let currentSong = this.playlist.getCurrentSong();
+    this.songInfoWrapper.querySelector('#album').innerText = currentSong.album;
+    this.songInfoWrapper.querySelector('#artist').innerText = currentSong.artist;
+    this.songInfoWrapper.querySelector('#title').innerText = currentSong.title;
+  }
 }
 
 module.exports = Player;

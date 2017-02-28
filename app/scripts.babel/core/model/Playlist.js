@@ -23,12 +23,20 @@ class Playlist{
     this.id = uuid();
   }
 
-  getCurrentSong(){
+  getCurrentSongId(){
     if(LanguageUtils.isEmptyObject(this.songs)){
       return null;
     }
     else{
       return this.songs[this.currentSongIndex];
+    }
+  }
+
+  getCurrentSong(){
+    let currentSongId = this.getCurrentSongId();
+    console.log(currentSongId);
+    if(currentSongId){
+      return window.EPlayer.libraryContainer.searchSongById(currentSongId);
     }
   }
 
@@ -80,21 +88,21 @@ class Playlist{
     this.currentSongIndex = 0;
   }
 
-  addSong(song){
+  addSong(songId){
     // TODO Revise if it is good idea to avoid duplicated songs
     // If song is already in the playlist
-    if(DataUtils.queryByExample(this.songs, {id: song.id}).length>0){
+    if(DataUtils.queryByExample(this.songs, songId).length>0){
       // TODO send message to user
       Logger.log('Song already added');
     }
     else{
-      this.songs.push(song);
+      this.songs.push(songId);
     }
   }
 
-  removeSong(song){
-    DataUtils.removeByExample(this.songs, {id: song.id});
-    Logger.log('Song '+song.id +' removed from '+this.id+' playlist');
+  removeSong(songId){
+    DataUtils.removeByExample(this.songs, songId);
+    Logger.log('Song '+songId+' removed from '+this.id+' playlist');
   }
 
   isEmpty(){
