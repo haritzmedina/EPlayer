@@ -26,11 +26,11 @@ class FileManager{
             if(opts && opts.fileExtension){
               let extension = fileExtensionRegEx.exec(file);
               if (extension[0] === opts.fileExtension) {
-                files.push(folderpath+'\\'+file);
+                files.push(folderpath+'/'+file);
               }
             }
             else{
-              files.push(folderpath+'\\'+file);
+              files.push(folderpath+'/'+file);
             }
           }
           console.log('Folder contains ' + files.length + ' files.');
@@ -45,7 +45,7 @@ class FileManager{
 
 
   static getAppDataFolderPath(){
-    return process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : '/var/local');
+    return process.env.APPDATA || (process.platform === 'darwin' ? process.env.HOME + '/Library/Preferences' : '/var/local');
   }
 
   static getUserStorageFolderPath(){
