@@ -20,7 +20,6 @@ class Menu{
     let menuItems = this.menuWrapper.querySelectorAll('.menuSelector');
     menuItems.forEach((menuItem)=>{
       menuItem.addEventListener('click', ()=>{
-        debugger;
         if(this.currentActivatedMenuItem){
           let containerToHide = document.getElementById(this.currentActivatedMenuItem.dataset.associatedContainer);
           containerToHide.dataset.enabled = false;

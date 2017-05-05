@@ -33,14 +33,6 @@ class Library{
     callback();
   }
 
-  /**
-   * Returns if the library is syncable in multiple devices (only for cloud based libraries)
-   * @returns {boolean}
-   */
-  isSyncable(){
-    return false;
-  }
-
   printLibrary(callback){
     // Retrieve container to print elements
     let container = document.getElementById('librarySearchResults');
@@ -54,7 +46,7 @@ class Library{
 
     let removeButton = libraryWrapper.querySelector('.libraryRemove');
     removeButton.addEventListener('click', ()=>{
-      window.GCPlayer.libraryContainer.removeLibrary({id: this.id}, ()=>{
+      window.EPlayer.libraryContainer.removeLibrary({id: this.id}, ()=>{
         Notification.createTextNotification(
           Notification.predefinedId.other,
           'Library removed',
@@ -65,7 +57,9 @@ class Library{
 
     let playButton = libraryWrapper.querySelector('.libraryPlay');
     playButton.addEventListener('click', ()=>{
-      window.GCPlayer.playlistContainer.changeCurrentPlaylist(new Playlist('temp', this.songs), true);
+      let songsId = [];
+      this.songs.forEach((song)=>{songsId.push(song.id)});
+      window.EPlayer.player.changeCurrentPlaylist(new Playlist('temp', songsId));
       // TODO Notify user that new playlist is loaded
     });
 
@@ -93,6 +87,10 @@ class Library{
       album: textFilter,
       title: textFilter
     }, DataUtils.stringInclude);
+  }
+
+  getSongById(songId){
+    return DataUtils.queryByExample(this.songs, {id: songId})[0];
   }
 
 }

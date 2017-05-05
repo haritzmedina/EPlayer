@@ -1,6 +1,6 @@
 'use strict';
 
-var Playlist = require('./model/Playlist');
+const Playlist = require('./model/Playlist');
 
 /**
  * A container for the playlist defined by user
@@ -13,7 +13,6 @@ class PlaylistContainer {
    */
   constructor(){
     this.playlists = [];
-    this.currentPlaylist = new Playlist([]);
   }
 
   addPlaylist(playlist){
@@ -22,14 +21,6 @@ class PlaylistContainer {
     }
     else{
       this.playlists.push(playlist);
-    }
-  }
-
-  changeCurrentPlaylist(playlist, isPlayable){
-    this.currentPlaylist = playlist;
-    if(isPlayable){
-      window.GCPlayer.player.setPlaylist(this.currentPlaylist);
-      window.GCPlayer.player.play();
     }
   }
 

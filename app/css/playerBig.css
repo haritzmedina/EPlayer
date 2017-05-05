@@ -1,0 +1,169 @@
+/* Player */
+#player{
+  display: none;
+}
+
+#playingSongInfo{
+  width: 35%;
+  float: left;
+}
+
+#playerControls{
+  width: 30%;
+  height: 4em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  padding-left: 3em;
+  float: left;
+}
+
+#playerProgressBar{
+  width: 100%;
+  position: absolute;
+  left:0;
+  bottom: 0;
+  margin-bottom: 0.5em;
+  height: 0.75em;
+  background-color: rgba(255,255,255,1);
+  cursor: pointer;
+}
+
+#playerProgressBar:hover{
+  height: 1.5em;
+}
+
+#playerTimeValue{
+  position: absolute;
+  bottom: 1.5em;
+  left: 0;
+  font-size: 1em;
+}
+
+#playerProgressBar:hover ~ #playerTimeValue{
+  bottom: 2.25em;
+}
+
+#playerTimeMax{
+  position: absolute;
+  bottom: 1.5em;
+  right: 0;
+  font-size: 1em;
+}
+
+#playerProgressBar:hover ~ #playerTimeMax{
+  bottom: 2.25em;
+}
+
+#playerWrapper progress::-webkit-progress-bar{
+  background-color : rgba(50,50,50,0.5);
+}
+
+#playerWrapper progress::-webkit-progress-value{
+  background-color: rgba(0,100,200,0.8);
+}
+
+.playerControl img{
+  width: 4em;
+  height: 4em;
+  -webkit-mask-size: 4em;
+  -webkit-mask-repeat: no-repeat;
+}
+
+#previous img{
+  -webkit-mask-image:url('../images/previous.svg');
+}
+
+#previous[data-activated='false'] img{
+  background-color: grey;
+}
+
+#previous[data-activated='true'] img{
+  background-color: white;
+}
+
+#previous[data-activated='true']:hover img{
+  background-color: rgba(0,100,200,0.8);
+  -webkit-transition: background-color 1000ms linear;
+}
+
+#next img{
+  -webkit-mask-image:url('../images/next.svg');
+}
+
+#next[data-activated='false'] img{
+  background-color: grey;
+}
+
+#next[data-activated='true'] img{
+  background-color: white;
+}
+
+#next[data-activated='true']:hover img{
+  background-color: rgba(0,100,200,0.8);
+  -webkit-transition: background-color 1000ms linear;
+}
+
+#repeatRandom img{
+}
+
+#repeatRandom[data-status='0'] img{
+  background-color: white;
+  -webkit-mask-image:url('../images/repeat.svg');
+}
+
+#repeatRandom[data-status='0']:hover img{
+  background-color: rgba(0,100,200,0.8);
+  -webkit-transition: background-color 1000ms linear;
+}
+
+#repeatRandom[data-status='1'] img{
+  -webkit-mask-image:url('../images/repeat.svg');
+  background-color: rgba(160,160,40,0.8);
+}
+
+#repeatRandom[data-status='1']:hover img{
+  background-color: rgba(0,100,200,0.8);
+  -webkit-transition: background-color 1000ms linear;
+}
+
+#repeatRandom[data-status='2'] img{
+  -webkit-mask-image:url('../images/shuffle.svg');
+  background-color: rgba(160,160,40,0.8);
+}
+
+#repeatRandom[data-status='2']:hover img{
+  background-color: rgba(0,100,200,0.8);
+  -webkit-transition: background-color 1000ms linear;
+}
+
+#playPause img{
+}
+
+#playPause[data-status='playing'] img{
+  -webkit-mask-image:url('../images/pause.svg');
+  background-color: white;
+}
+
+#playPause[data-status='stopped'] img{
+  -webkit-mask-image:url('../images/play.svg');
+  background-color: grey;
+}
+
+#playPause[data-status='paused'] img{
+  -webkit-mask-image:url('../images/play.svg');
+  background-color: white;
+}
+
+#playPause[data-status='playing']:hover img{
+  background-color: rgba(0,100,200,0.8);
+  -webkit-transition: background-color 1000ms linear;
+}
+
+#playPause[data-status='paused']:hover img{
+  background-color: rgba(0,100,200,0.8);
+  -webkit-transition: background-color 1000ms linear;
+}
+
+.playingSongMetadata{
+  display: block;
+}

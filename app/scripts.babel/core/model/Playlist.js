@@ -11,7 +11,7 @@ let LanguageUtils = require('../../utils/LanguageUtils');
 class Playlist{
 
   constructor(name, songs){
-    this.currentSong = {};
+    this.currentSongIndex = null;
     // TODO Check if isEmptyObject or isEmptyArray required
     if(LanguageUtils.isEmptyObject(songs)){
       this.songs = [];
@@ -20,103 +20,107 @@ class Playlist{
       this.songs = songs;
     }
     this.name = name;
-    this.repeat = true;
     this.id = uuid();
-    this.shuffle = false;
-    this.playingSongs = [];
+  }
+
+  getCurrentSongId(){
+    if(LanguageUtils.isEmptyObject(this.songs)){
+      return null;
+    }
+    else{
+      return this.songs[this.currentSongIndex];
+    }
+  }
+
+  getCurrentSong(){
+    let currentSongId = this.getCurrentSongId();
+    if(currentSongId){
+      return window.EPlayer.libraryContainer.getSongById(currentSongId);
+    }
+  }
+
+  firstSong(){
+    if(LanguageUtils.isEmptyObject(this.songs)){
+      return this.songs[0];
+    }
+    else{
+      return null;
+    }
+  }
+
+  lastSong(){
+    if(LanguageUtils.isEmptyObject(this.songs)){
+      return this.songs[this.songs.length-1];
+    }
+    else{
+      return null;
+    }
+  }
+
+  existsNextSong(){
+    return this.currentSongIndex < this.songs.length-1;
+  }
+
+  existsPreviousSong(){
+    return this.currentSongIndex > 0;
+  }
+
+  nextSong(){
+    this.currentSongIndex+=1;
+  }
+
+  previousSong(){
+    this.currentSongIndex-=1;
+  }
+
+  randomSong(){
+    this.currentSongIndex = DataUtils.getRandomInt(this.songs.length);
+  }
+
+  setSong(index){
+    if(index>=0 && index<this.songs.length){
+      this.currentSongIndex = index;
+    }
   }
 
   start(){
-    if(this.songs.length===0){
-      this.currentSong = null;
-    }
-    else{
-      if(this.shuffle){
-        // Randomize playlist
-        this.playingSongs = DataUtils.shuffle(this.songs);
+    this.currentSongIndex = 0;
+  }
+
+  addSong(songId){
+    // Check if song is in libraries
+    if(window.EPlayer.libraryContainer.getSongById(songId)){
+      // TODO Revise if it is good idea to avoid duplicated songs
+      // If song is already in the playlist
+      if(DataUtils.queryByExample(this.songs, songId).length>0){
+        // TODO send message to user
+        Logger.log('Song already added');
       }
       else{
-        // Ordered songs
-        this.playingSongs = this.songs.slice();
-      }
-      // Set current song
-      this.currentSong = this.playingSongs[0];
-    }
-  }
-
-  activateShuffle(){
-    this.shuffle = true;
-  }
-
-  deactivateShuffle(){
-    this.shuffle = false;
-  }
-
-  getNextSong(){
-    if(this.playingSongs.length-1 <= this.getCurrentSongIndex()){
-      if(this.repeat){
-        return this.playingSongs[0];
-      }
-      else{
-        return null;
+        this.songs.push(songId);
       }
     }
-    else{
-      return this.playingSongs[this.getCurrentSongIndex()+1];
-    }
   }
 
-  setCurrentNextSong(){
-    this.currentSong = this.getNextSong();
-  }
-
-  setCurrentPreviousSong(){
-    this.currentSong = this.getPreviousSong();
-  }
-
-  setCurrentRandomSong(){
-    this.currentSong = DataUtils.getRandomElement(this.playingSongs);
-  }
-
-  getCurrentSongIndex(){
-    return DataUtils.queryIndexByExample(this.playingSongs, {id: this.currentSong.id});
-  }
-
-  getPreviousSong(){
-    if(this.getCurrentSongIndex()===0){
-      if(this.repeat){
-        return this.playingSongs[this.playingSongs.length-1];
-      }
-      else{
-        return null;
-      }
-    }
-    else{
-      return this.playingSongs[this.getCurrentSongIndex()-1];
-    }
-  }
-
-  addSong(song){
-    // TODO Revise if it is good idea to avoid duplicated songs
-    // If song is already in the playlist
-    if(DataUtils.queryByExample(this.songs, {id: song.id}).length>0){
-      // TODO send message to user
-      Logger.log('Song already added');
-    }
-    else{
-      this.songs.push(song);
-      this.playingSongs.push(song);
-
-    }
-  }
-
-  removeSong(song){
-    DataUtils.removeByExample(this.songs, {id: song.id});
-    Logger.log('Song '+song.id +' removed from '+this.id+' playlist');
+  removeSong(songId){
+    DataUtils.removeByExample(this.songs, songId);
+    Logger.log('Song '+songId+' removed from '+this.id+' playlist');
   }
 
   isEmpty(){
     return this.songs.length===0;
+  }
+
+  checkPlaylistSongsAvailability(){
+    let availableSongs = [];
+    for(let i=0;i<this.songs.length;i++){
+      if(window.EPlayer.libraryContainer.getSongById(this.songs[i])){
+        availableSongs.push(this.songs[i]);
+      }
+    }
+    let songsChanged = this.songs.length !== availableSongs.length;
+    this.songs = availableSongs;
+    return songsChanged;
   }
 
   printPlaylist(){

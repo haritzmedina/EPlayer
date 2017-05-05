@@ -1,0 +1,22 @@
+/* Scrollbar */
+
+/* Let's get this party started */
+::-webkit-scrollbar {
+  width: 1em;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(125,125,125,0.3);
+  -webkit-border-radius: 0.2em;
+  border-radius: 0.2em;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background: rgba(0,100,200,0.8);
+  -webkit-box-shadow: inset 0 0 0.1em rgba(0,0,0,0.5);
+}
+::-webkit-scrollbar-thumb:window-inactive {
+  background: rgba(0,70,140,0.4);
+}

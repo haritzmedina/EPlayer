@@ -4,14 +4,15 @@ const jquery = require('jquery');
 const uuid = require('uuid');
 const Playlist = require('./Playlist');
 const Logger = require('./../../io/Logger');
+const LanguageUtils = require('./../../utils/LanguageUtils');
 
 
 class Song{
   constructor(id, title, artist, album, src){
     this.id = id;
-    this.title = title;
-    this.artist = artist;
-    this.album = album;
+    this.title = LanguageUtils.valueOrEmpty(title, LanguageUtils.isString(title));
+    this.artist = LanguageUtils.valueOrEmpty(artist, LanguageUtils.isString(artist));
+    this.album = LanguageUtils.valueOrEmpty(album, LanguageUtils.isString(album));
     this.src = src;
   }
 
@@ -19,7 +20,6 @@ class Song{
     // Display song using librarySongElement template
     let template = document.querySelector('#librarySongElement');
     let content = document.importNode(template.content, true);
-
     let songDiv = content.querySelector('.librarySongElement');
     songDiv.dataset.songId = this.id;
     let artistDiv = content.querySelector('.librarySongElementArtist');
@@ -30,12 +30,11 @@ class Song{
     titleDiv.innerText = this.title;
     let playButton = content.querySelector('.librarySongPlayButton');
     playButton.addEventListener('click', (event)=>{
-      window.GCPlayer.playlistContainer.changeCurrentPlaylist(new Playlist('temp', [this]), true);
+      window.EPlayer.player.changeCurrentPlaylist(new Playlist('temp', [this.id]));
     });
     let addPlaylistButton = content.querySelector('.librarySongAddPlaylist');
     addPlaylistButton.addEventListener('click', (event)=>{
-      window.GCPlayer.playlistContainer.currentPlaylist.addSong(this);
-
+      window.EPlayer.player.addSong(this.id);
     });
     container.appendChild(content);
   }

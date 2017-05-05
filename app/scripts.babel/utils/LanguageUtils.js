@@ -4,7 +4,7 @@
  */
 'use strict';
 
-var jQuery = require('jquery');
+const jQuery = require('jquery');
 
 class LanguageUtils {
 
@@ -30,6 +30,10 @@ class LanguageUtils {
     return obj instanceof classReference;
   }
 
+  static isString(obj){
+    return typeof obj === 'string';
+  }
+
   static fillObject(object, properties){
     return Object.assign(object, properties);
   }
@@ -37,7 +41,7 @@ class LanguageUtils {
   static createCustomEvent(name, data){
     return (new CustomEvent(name, {
       detail: {
-        message: 'Song is changed',
+        message: name,
         data: data,
         time: new Date()
       },
@@ -46,6 +50,23 @@ class LanguageUtils {
     }));
   }
 
+  static valueOrEmpty(value, condition){
+    if(condition){
+      return value;
+    }
+    else{
+      return '';
+    }
+  }
+
+  static switchCases(cases, defaultCase, key){
+    if (key in cases) {
+      return cases[key];
+    }
+    else {
+      return defaultCase;
+    }
+  }
 }
 
 module.exports = LanguageUtils;

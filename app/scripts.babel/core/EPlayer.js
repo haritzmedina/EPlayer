@@ -1,22 +1,21 @@
 'use strict';
 
 const ExtensionsRunner = require('../extensions/ExtensionsRunner');
-const ChromeStorage = require('../io/ChromeStorage');
 const LibraryContainer = require('./LibraryContainer');
 const Player = require('./Player');
 const Menu = require('./Menu');
 const PlaylistContainer = require('./PlaylistContainer');
 const Logger = require('../io/Logger');
 
-const LocalLibrary = require('./model/LocalLibrary');
+const {globalShortcut} = window.require('electron').remote;
 
 /**
- * The main file of GCPlayer
+ * The main file of EPlayer
  * @author Haritz Medina <me@haritzmedina.com>
  */
-class GCPlayer{
+class EPlayer{
   /**
-   * The constructor of GCPlayer
+   * The constructor of EPlayer
    */
   constructor(){
     this.extensionsRunner = new ExtensionsRunner();
@@ -28,11 +27,11 @@ class GCPlayer{
   }
 
   /**
-   * Initialization of GCPlayer components
+   * Initialization of EPlayer components
    */
   init(){
-    // Add global reference to GCPlayer
-    window.GCPlayer = this;
+    // Add global reference to EPlayer
+    window.EPlayer = this;
 
     // Load core components
     this.loadCoreComponents();
@@ -41,8 +40,11 @@ class GCPlayer{
     this.extensionsRunner.init();
 
     // Load special events
+    // TODO FIX this functions (handlers when app is closed and multimedia buttons)
     this.loadCloseEvents();
-    this.loadChromeEvents();
+    this.loadMultimediaEvents();
+
+    /*this.loadChromeEvents();*/
   }
 
   loadCoreComponents(){
@@ -56,15 +58,14 @@ class GCPlayer{
 
           });
         }
+
+        // Load player
+        this.player.init();
       });
     });
 
     // Load playlists
-
-    // Load player
-    this.player.initPanelHandlers();
-
-
+    
     // Load interface
     this.menu.init();
 
@@ -73,9 +74,31 @@ class GCPlayer{
   }
 
   loadCloseEvents() {
-    chrome.runtime.onSuspend.addListener(()=>{
+    window.onbeforeunload = ()=>{
       // Update library container chrome storage
-      this.libraryContainer.updateChromeStorage();
+      this.libraryContainer.onClose();
+      this.player.onClose();
+    };
+  }
+
+  loadMultimediaEvents(){
+    // TODO based on settings defined by the user
+    // Play/pause shortcut
+    globalShortcut.register('Control+Shift+6', () => {
+      if(this.player.currentStatus===this.player.status.paused){
+        this.player.play();
+      }
+      else if(this.player.currentStatus===this.player.status.playing){
+        this.player.pause();
+      }
+    });
+    // Previous song shortcut
+    globalShortcut.register('Control+Shift+5', () => {
+      this.player.previousSong();
+    });
+    // Next song shortcut
+    globalShortcut.register('Control+Shift+7', () => {
+      this.player.nextSong();
     });
   }
 
@@ -100,4 +123,4 @@ class GCPlayer{
   }
 }
 
-module.exports = GCPlayer;
+module.exports = EPlayer;

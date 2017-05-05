@@ -1,7 +1,8 @@
 'use strict';
 
-var SongSource = require('./SongSource');
-var LanguageUtils = require('../../utils/LanguageUtils');
+const SongSource = require('./SongSource');
+const LanguageUtils = require('../../utils/LanguageUtils');
+const fs = require('fs');
 
 /**
  * Song resource for local files
@@ -10,21 +11,17 @@ var LanguageUtils = require('../../utils/LanguageUtils');
 
 class SongFileSource extends SongSource{
 
-  constructor(fileEntry){
+  constructor(filepath){
     super();
-    this.fileEntry = fileEntry;
+    // Replace special chars: #
+    this.filepath = filepath
+      .replace('#', '%23');
   }
 
   retrievePlayableSource(callback){
-    this.fileEntry.file(function (file) {
-      let reader = new FileReader();
-      reader.onload = function () {
-        if(LanguageUtils.isFunction(callback)){
-          callback(reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
+    if(LanguageUtils.isFunction(callback)){
+      callback(this.filepath);
+    }
   }
 }
 

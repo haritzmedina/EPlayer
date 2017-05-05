@@ -1,12 +1,14 @@
 'use strict';
 
-const ChromeStorage = require('../io/ChromeStorage');
-const ChromeStorageNamespaces = require('../io/ChromeStorageNamespaces');
+const LocalStorage = require('../io/LocalStorage');
+const StorageNamespaces = require('../io/StorageNamespaces');
 const LanguageUtils = require('../utils/LanguageUtils');
 const Logger = require('../io/Logger');
 const LocalLibrary = require('./model/LocalLibrary');
 const DataUtils = require('../utils/DataUtils');
 const Library = require('./model/Library');
+
+const {dialog} = window.require('electron').remote;
 
 /**
  * Library container. A container and manager for libraries defined by the user.
@@ -14,55 +16,36 @@ const Library = require('./model/Library');
  */
 class LibraryContainer{
   constructor(){
-    this.localLibraries = [];
-    this.syncLibraries = [];
+    this.libraries = [];
     this.librarySearchInput = document.querySelector('#librarySearch');
     this.addLibraryButton = document.querySelector('#addLibraryButton');
   }
 
   /**
-   * Initialize the library container (retrieves saved data from Chrome Storage) and initialize components behaviour
+   * Initialize the library container (retrieves saved data from Local Storage) and initialize components behaviour
    * @param callback The callback function to execute after library container is initialized
    */
   init(callback) {
-    // Prepare async promises
-    let promises = [];
-    // Load local saved libraries data from chrome storage
-    promises.push(new Promise((resolve, reject) => {
-      ChromeStorage.getData(ChromeStorageNamespaces.library.container, ChromeStorage.local, (error, result)=> {
+    // Load local saved libraries data from local storage
+    (new Promise((resolve, reject) => {
+      LocalStorage.init();
+      LocalStorage.getData(StorageNamespaces.library.container, (error, result)=> {
         if(error){
           Logger.log(error);
         }
-        this.localLibraries = [];
+        this.libraries = [];
         if (!LanguageUtils.isEmptyObject(result)) {
           for(let i=0;i<result.length;i++){
-            this.localLibraries.push(LanguageUtils.fillObject(new LocalLibrary(), result[i]));
+            this.libraries.push(LanguageUtils.fillObject(new LocalLibrary(), result[i]));
           }
         }
         resolve();
       });
-    }));
-    // Load sync saved libraries data from chrome storage
-    promises.push(new Promise((resolve, reject) => {
-      ChromeStorage.getData(ChromeStorageNamespaces.library.container, ChromeStorage.sync, (error, result)=>{
-        if(error){
-          Logger.log(error);
-        }
-        this.syncLibraries = [];
-        if (!LanguageUtils.isEmptyObject(result)) {
-          for(let i=0;i<result.length;i++){
-            // TODO Depending on Library is needed to create an object instead of 'new Library()'
-            this.syncLibraries.push(LanguageUtils.fillObject(new Library(), result[i]));
-          }
-        }
-        resolve();
-      });
-    }));
-    Promise.all(promises).then(()=>{
-      Logger.log(this.localLibraries);
-      Logger.log(this.syncLibraries);
+    })).then(()=>{
+      Logger.log(this.libraries);
       callback();
     });
+
 
     // Handler of search input
     let searchEvent = (event)=>{
@@ -98,16 +81,16 @@ class LibraryContainer{
     container.innerText = '';
 
     let promises = [];
-    for(let i=0;i<this.localLibraries.length;i++){
+    for(let i=0;i<this.libraries.length;i++){
       promises.push(new Promise((resolve, reject)=>{
-        let localLibrary = this.localLibraries[i];
+        let localLibrary = this.libraries[i];
         localLibrary.loadLibrary(()=>{
           resolve();
         });
       }));
     }
     Promise.all(promises).then(()=>{
-      this.updateChromeStorage(callback);
+      this.updateLocalStorage(callback);
     });
   }
 
@@ -116,8 +99,8 @@ class LibraryContainer{
     let container = document.getElementById('librarySearchResults');
     container.innerText = '';
 
-    for(let i=0;i<this.localLibraries.length;i++){
-      this.localLibraries[i].printLibrary();
+    for(let i=0;i<this.libraries.length;i++){
+      this.libraries[i].printLibrary();
     }
   }
 
@@ -128,11 +111,11 @@ class LibraryContainer{
    */
   addLocalLibrary(library, callback){
     // Check if library is already added
-    if(DataUtils.queryByExample(this.localLibraries, {absolutePath: library.absolutePath}).length===0){
-      this.localLibraries.push(library);
+    if(DataUtils.queryByExample(this.libraries, {absolutePath: library.absolutePath}).length===0){
+      this.libraries.push(library);
       library.loadLibrary(()=>{
         // Update local library
-        this.updateChromeStorage(callback);
+        this.updateLocalStorage(callback);
       });
     }
     else{
@@ -140,22 +123,25 @@ class LibraryContainer{
     }
   }
 
-  updateChromeStorage(callback){
-    ChromeStorage.setData(ChromeStorageNamespaces.library.container, this.localLibraries, ChromeStorage.local, ()=>{
+  updateLocalStorage(callback){
+    LocalStorage.setData(StorageNamespaces.library.container, this.libraries, ()=>{
       if(LanguageUtils.isFunction(callback)){
         callback();
       }
     });
   }
 
+  onClose(callback){
+    this.updateLocalStorage(callback);
+  }
+
   removeLibrary(library, callback){
     // Remove library from local or sync (depending on where it is
-    DataUtils.removeByExample(this.localLibraries, library);
-    DataUtils.removeByExample(this.syncLibraries, library);
+    DataUtils.removeByExample(this.libraries, library);
     // Reload libraries
     this.loadLibraries(()=>{
-      // Update chrome storage
-      this.updateChromeStorage(()=>{
+      // Update local storage
+      this.updateLocalStorage(()=>{
         if(LanguageUtils.isFunction(callback)){
           callback();
         }
@@ -164,36 +150,25 @@ class LibraryContainer{
   }
 
   promptNewLocalLibraryForm(callback){
-    chrome.fileSystem.chooseEntry({ type: 'openDirectory' }, (dirEntry)=>{
-      // Save new folder reference on model
-      if(dirEntry){
-        let folderPointer = chrome.fileSystem.retainEntry(dirEntry);
-        // TODO retrieve and save localpath and entrypoint
-        chrome.fileSystem.getDisplayPath(dirEntry, (absolutePath) => {
-          let localLibrary = new LocalLibrary(folderPointer, absolutePath);
-          this.addLocalLibrary(localLibrary, ()=>{
-            if(LanguageUtils.isFunction(callback)){
-              callback();
-            }
-          });
-        });
-      }
-      else{
+    dialog.showOpenDialog({properties: ['openDirectory']}, (folderpath)=>{
+      // TODO Folder class source instead of string
+      let localLibrary = new LocalLibrary(folderpath[0]);
+      this.addLocalLibrary(localLibrary, ()=>{
         if(LanguageUtils.isFunction(callback)){
           callback();
         }
-      }
+      });
     });
   }
 
   areLibrariesDefined(){
-    return this.localLibraries.length+this.syncLibraries.length>0;
+    return this.libraries.length>0;
   }
 
   retrieveAllSongs(){
     let songs = [];
-    for(let i=0;i<this.localLibraries.length;i++){
-      songs = songs.concat(this.localLibraries[i].retrieveSongs());
+    for(let i=0;i<this.libraries.length;i++){
+      songs = songs.concat(this.libraries[i].retrieveSongs());
     }
     return songs;
   }
@@ -202,9 +177,9 @@ class LibraryContainer{
     if(textFilter.length>0){
       let results = [];
       let promises = [];
-      for(let i=0;i<this.localLibraries.length;i++){
+      for(let i=0;i<this.libraries.length;i++){
         promises.push(new Promise((resolve, reject)=>{
-          results = results.concat(this.localLibraries[i].getSongsByTextFilter(textFilter));
+          results = results.concat(this.libraries[i].getSongsByTextFilter(textFilter));
           resolve();
         }));
       }
@@ -221,10 +196,24 @@ class LibraryContainer{
     }
   }
 
+  getLibraryBySongId(songId){
+    let splitId = songId.split('?');
+    let libraryId = splitId[0];
+    return DataUtils.queryByExample(this.libraries, {id: libraryId})[0];
+  }
+
+  getSongById(songId){
+    let library = this.getLibraryBySongId(songId);
+    if(library){
+      return library.getSongById(songId);
+    }
+    return null;
+  }
+
+
   printSearchedSongs(songs){
     let container = document.getElementById('librarySearchResults');
     container.innerText = '';
-
     for(let i=0;i<songs.length;i++){
       songs[i].printLibrarySong(container);
     }

@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <!-- TODO remove this script on production -->
+  <script>require('electron-connect').client.create()</script>
+  <!-- -->
   <script type="text/javascript" src="scripts/Window.js"></script>
   <link rel="stylesheet" media="screen and (min-width: 800px)" href="css/windowBig.css"/>
   <link rel="stylesheet" media="screen and (max-width: 799px)" href="css/windowSmall.css"/>
-  <title>Google Chrome Player</title>
+  <title>EPlayer</title>
 </head>
 <body>
 <div id="menu">
@@ -15,6 +18,7 @@
   <span id="expandSelector" class="menuElement" title="Expand menu">
   </span>
   -->
+
 </div>
 
 <div id="content">
@@ -23,14 +27,16 @@
       <input id="librarySearch" type="search" placeholder="Search for song"/>
     </div>
     <div id="libraryControlsWrapper">
-      <span id="addLibraryButton" class="libraryControl"></span>
+      <span id="addLibraryButton" class="libraryControl">
+        <img src="" title="Add library"/>
+      </span>
     </div>
     <div id="librarySearchResults">
       <!-- Here will be added song results -->
     </div>
     <template id="librarySongElement">
       <div class="librarySongElement">
-        <span class="librarySongControl librarySongPlayButton" title="Play"></span>
+        <span class="clickableButtonImage librarySongControl librarySongPlayButton" title="Play"></span>
         <span class="librarySongControl librarySongAddPlaylist" title="Add playlist"></span>
         <span class="librarySongText librarySongElementArtist"></span>
         <span class="librarySongText librarySongElementTitle"></span>
@@ -41,7 +47,7 @@
       <div class="libraryTopWrapper">
         <div class="libraryTitleWrapper"></div>
         <div class="libraryOptions">
-          <div class="libraryPlay"></div>
+          <div class="libraryPlay clickableButtonImage"></div>
           <div class="libraryRemove"></div>
         </div>
       </div>
@@ -84,19 +90,19 @@
 </div>
 <div id="playerWrapper">
   <progress id="playerProgressBar"></progress>
-  <a class="playerControl" id="previous"><img src="./images/previous.png" title="previous"></a>
-  <a class="playerControl" id="play" data-activated="true"><img src="./images/play.png" title="play"></a>
-  <a class="playerControl" id="pause" data-activated="false"><img src="./images/pause.png" title="pause"></a>
-  <a class="playerControl" id="next"><img src="./images/next.png" title="next"></a>
-  <a class="playerControl" id="repeat" data-status="false"><img src="./images/repeat.png" title="repeat"></a>
-  <a class="playerControl" id="random" data-status="false"><img src="./images/shuffle.png" title="random"></a>
-  <span id="playerTimeValue">--:--</span>/<span id="playerTimeMax">--:--</span>
-  <span id="playingSongInfo">
-    <span id="album"></span>
-    <span id="artist"></span>
-    <span id="title"></span>
+  <span id="playerTimeValue"></span><span id="playerTimeMax"></span>
+  <div id="playingSongInfo">
+    <span id="title" class="playingSongMetadata"></span>
+    <span id="artist" class="playingSongMetadata"></span>
+    <span id="album" class="playingSongMetadata"></span>
     <span id="cover"></span>
-  </span>
+  </div>
+  <div id="playerControls">
+    <a class="playerControl" id="previous" data-activated="false"><img src=""></a>
+    <a class="playerControl" id="playPause" data-status="stopped" data-description="play pause"><img src=""></a>
+    <a class="playerControl" id="next" data-activated="false"><img src=""></a>
+    <a class="playerControl" id="repeatRandom" data-activated="false" data-status="0"><img src="" title=""></a>
+  </div>
 </div>
 <audio id="player" controls="controls"></audio>
 </body>
