@@ -1,3 +1,5 @@
+'use strict';
+
 const gulp = require('gulp');
 const rename = require('gulp-rename');
 const del = require('del');
@@ -19,7 +21,7 @@ gulp.task('electron', ()=>{
   runSequence('lint', 'browserify', ()=>{
     // Start browser process
     electron.start((electronProcState) => {
-      if (electronProcState == 'stopped') {
+      if (electronProcState === 'stopped') {
         process.exit(); // Close the process if window is closed
       }
     });
@@ -94,16 +96,13 @@ gulp.task('dist', (cb)=>{
   });
 });
 
-gulp.task('package', (cb)=>{
-  runSequence('dist', ()=>{
-    "use strict";
+gulp.task('package', ()=>{
     packager({
       dir: './dist',
       icon: './dist/icon.ico',
       overwrite: true,
       out: './package'
     }, function done_callback (err, appPaths) {});
-  });
 });
 
 gulp.task('default', ['clean'], cb => {
